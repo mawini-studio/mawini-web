@@ -42,7 +42,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
-- Galleriet har två sektioner, var och en med eget justified grid: först **design** (allt som inte är foto: graphic-design, illustration, other), sedan **photography**. Rubrikerna är feta, samma storlek som brödtexten, och texten står i `src/content/texter.md` (`gallery.design`, `gallery.photography`)
+- Galleriet har två sektioner, var och en med eget justified grid: först **design** (allt som inte är foto: graphic-design, illustration, other), sedan **photography**. Rubrikerna har normal vikt (Regular) och samma storlek som brödtexten, och texten står i `src/content/texter.md` (`gallery.design`, `gallery.photography`)
 - Ordningen inom varje sektion = ordningen i galleri.yaml. Läses via content collection (`src/content.config.ts`), som validerar fälten
 - Bildfilerna ligger i `src/assets/gallery/<category>/`. Ett felstavat filnamn stoppar bygget med ett tydligt fel
 - Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger. Lightboxen bläddrar genom alla bilder i en följd (design → photography → tillbaka till början)
