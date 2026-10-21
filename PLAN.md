@@ -22,7 +22,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Text | `#111` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
-| Textstorlek | 13 px överallt (även mobil), radavstånd 1.5. Ordmärke 15 px. CSS-variabler i `src/styles/global.css` |
+| Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
 
 - Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
 - Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern
@@ -131,3 +131,4 @@ Uppdateras vid varje ändring av sajten.
 - Sektionsrubrikerna i Regular i stället för fetstil
 - PLAN.md: struktur, snabbreferens och denna ändringslogg
 - Beaujolais Nouveau-affischerna i omvänd ordning, nyast först (2026 → 2020)
+- All typografi ett steg mindre: text 13 → 12 px, ordmärke 15 → 14 px
