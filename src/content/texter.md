@@ -26,8 +26,8 @@ meta:
 
 **mats w nilsson** : artist in [ or out of ] residence
 
-**design + photography + code** 30+ years in the business. stockholm based. working independently as well as in collaboration with clients and agencies.
+**design + photography + code** : 30+ years in the business. stockholm based. working independently as well as in collaboration with clients and agencies.
 
-**competence** spans a wide range — graphic design, brand identity, art direction, photography, web design, app design, game design, coding (web, apps, games), motion graphics, illustration, copywriting — for clients ranging from ambitious startups to established global brands.
+**competence** : spans a wide range — graphic design, brand identity, art direction, photography, web design, app design, game design, coding (web, apps, games), motion graphics, illustration, copywriting — for clients ranging from ambitious startups to established global brands.
 
-**driven by** a deep interest in art, design, photography, architecture and technology.
+**driven by** : a deep interest in art, design, photography, architecture and technology.
