@@ -130,3 +130,4 @@ Uppdateras vid varje ändring av sajten.
 - Galleriet delat i sektionerna "design" och "photography"; lightboxen bläddrar genom alla bilder i en följd; ny bildordning
 - Sektionsrubrikerna i Regular i stället för fetstil
 - PLAN.md: struktur, snabbreferens och denna ändringslogg
+- Beaujolais Nouveau-affischerna i omvänd ordning, nyast först (2026 → 2020)
