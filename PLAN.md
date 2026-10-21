@@ -25,15 +25,18 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Textstorlek | 13 px överallt (även mobil), radavstånd 1.5. Ordmärke 15 px. CSS-variabler i `src/styles/global.css` |
 
 - Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
-- Avdelare: streckade orange linjer
+- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
-1. Header: "mawini studio" + rund logga (`material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600)
-2. Intro: "creator of things", kategorier, kontaktikoner
-3. Galleri: justified grid (lika radhöjd, bredd efter bildens proportioner, färre per rad på mobil)
-4. Om-text
-5. Footer
+1. Header: "mawini studio" + rund logga (inline-SVG i `src/components/Logo.astro`, från `material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600). Favicon: `public/favicon.svg`
+2. Streckad linje
+3. Intro: "creator of things" (SemiBold), kategorier, kontaktikoner
+4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
+5. Om-text
+6. Footer
+
+Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
 
 ## Texter
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
@@ -56,7 +59,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - Case-sidor (t.ex. Beaujolais Nouveau-serien)
 - Bildkonvertering: skript som skalar källbilder till ca 2400 px, JPG-kvalitet ~85, innan de läggs i src/ (håller nere repots storlek, nu ca 70 MB)
 
-## Lansering (när sajten är klar)
+## Lansering (klar 2026-10-21, utom Wix)
 1. Testa lokalt med `npm run build && npm run preview`. Aktivera GitHub Pages (Settings → Pages → Source: GitHub Actions). Obs: adressen mawini-studio.github.io/mawini-web/ visar inte sajten korrekt, eftersom den byggs för domänroten (mawini.com)
 2. Loopia: ta bort vidarebefordran på mawini.com. Lägg A-poster för mawini.com mot 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 (AAAA: 2606:50c0:8000::153 … 8003::153) och CNAME för www mot `mawini-studio.github.io`. Ange mawini.com som Custom domain under Settings → Pages
 3. **Rör inte MX-posterna** (e-post info@ / mats@mawini.com, mats@killershark.se)
@@ -97,7 +100,33 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
    ```
 3. Spara – bilden syns direkt på dev-servern. Fel kategori, saknad alt eller fel filnamn stoppar bygget med ett tydligt felmeddelande.
 
+**Dev-server**
+- Starta: `npm run dev -- --host` (nås från mobilen på samma wifi via adressen under "Network")
+- Stoppa: `npx astro dev stop`, status: `npx astro dev status`
+- Om galleriet är tomt (content-cachen i `.astro/` har försvunnit): stoppa och starta om dev-servern
+
+**Publicera**
+- `git push` till `main` bygger och publicerar automatiskt till mawini.com (GitHub Actions, ca 1 min)
+
 **VS Code**
 - ⌘P öppnar en fil snabbt om du skriver en del av namnet, t.ex. *texter*
 - ⇧⌘V förhandsvisar markdown formaterat
 - Ändrade filer markeras med **M** i Explorer tills de är committade
+
+## Ändringslogg
+Uppdateras vid varje ändring av sajten.
+
+**2026-10-21**
+- Astro-projekt, Git, Fontsource-typsnitt; bilder kopierade till `src/assets/gallery/` utan inledande bindestreck
+- Första layouten: vitt kort mot randig bakgrund, header, intro, kontaktikoner, om-text, footer
+- Justified grid (CSS-flex, radbrytningar optimeras med JS) och lightbox (pilar, tangentbord, swipe, Esc)
+- Typografi: all text 13 px även på mobil, ordmärke 15 px, radavstånd 1.5, som CSS-variabler
+- Texter och kontaktuppgifter flyttade till `src/content/texter.md`; `material/texter.md` borttagen
+- Galleriet flyttat till `src/content/galleri.yaml` (content collection); `material/bildlista.md` och `src/data/gallery.ts` borttagna
+- Publikt GitHub-repo, deploy till GitHub Pages via Actions, `public/CNAME`; DNS bytt och HTTPS påslaget
+- Streckad linje mellan header och intro, som i Carrd-skissen
+- Nya kategorier i introt (design / photography / code / other) och uppdaterad om-text, med " : " efter de feta inledningsorden
+- Nya versioner av Beaujolais Nouveau-affischerna 2020–2026; nya bilder `octopus-chartm-a.jpg` och `sakura-poster-a3.jpg`
+- Galleriet delat i sektionerna "design" och "photography"; lightboxen bläddrar genom alla bilder i en följd; ny bildordning
+- Sektionsrubrikerna i Regular i stället för fetstil
+- PLAN.md: struktur, snabbreferens och denna ändringslogg
