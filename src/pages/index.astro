@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import ContactIcons from '../components/ContactIcons.astro';
+import Gallery from '../components/Gallery.astro';
+
+const title = 'mawini studio — graphic design / photography / illustration';
+const description =
+  'Stockholm-based graphic designer and photographer. Brand identity, art direction, photography and illustration.';
+---
+
+<Base title={title} description={description}>
+  <main class="card">
+    <header class="site-header">
+      <h1 class="wordmark">mawini studio</h1>
+      <Logo size={64} />
+    </header>
+
+    <section class="intro">
+      <p class="tagline">creator of things</p>
+      <p class="categories">graphic design / photography / illustration / other</p>
+      <ContactIcons />
+    </section>
+
+    <hr />
+
+    <Gallery />
+
+    <hr />
+
+    <section class="about" aria-label="About">
+      <p><b>mats w nilsson</b> : artist in [ or out of ] residence</p>
+      <p>
+        <b>graphic design + photography</b> 30+ years in the business. stockholm based. working
+        independently as well as in collaboration with clients and agencies.
+      </p>
+      <p>
+        <b>competence</b> spans a wide range — graphic design, brand identity, art direction,
+        photography, game design, motion graphics, illustration, copywriting — for clients ranging
+        from ambitious startups to established global brands.
+      </p>
+      <p><b>driven by</b> a deep interest in art, design, photography and architecture.</p>
+    </section>
+
+    <hr />
+
+    <footer class="site-footer">
+      <p>© mmxxvi mawini</p>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  .card {
+    max-width: 1080px;
+    margin: clamp(1rem, 4vw, 3.5rem) auto;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    background: var(--paper);
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    letter-spacing: 0.35em;
+    text-transform: lowercase;
+  }
+
+  .intro {
+    margin-top: clamp(2rem, 6vw, 3.5rem);
+  }
+
+  .tagline {
+    margin: 0;
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .categories {
+    margin: 0.4rem 0 1.4rem;
+    color: #555;
+  }
+
+  .about {
+    max-width: 40rem;
+  }
+
+  .about p {
+    margin: 0 0 1rem;
+  }
+
+  .site-footer p {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.15em;
+    color: #555;
+  }
+</style>

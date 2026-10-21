@@ -1,0 +1,6 @@
+// Syncthing: synka inte genererade filer (återskapas av npm/Astro)
+node_modules
+dist
+.astro
+.cache
+(?d).DS_Store
