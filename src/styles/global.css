@@ -34,7 +34,7 @@ body {
   background-image: repeating-linear-gradient(
     -45deg,
     var(--stripe) 0 1px,
-    transparent 1px 8px
+    transparent 1px 6px
   );
 }
 

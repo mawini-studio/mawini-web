@@ -18,7 +18,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Token | Värde |
 |---|---|
 | Accent | `#FF4600` |
-| Bakgrundsränder | `#DEDEDE`, diagonala, ca 1 px linje / 6–8 px mellanrum |
+| Bakgrundsränder | `#DEDEDE`, diagonala, 1 px linje som upprepas var 6:e px (5 px mellanrum) |
 | Text | `#111` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
@@ -132,3 +132,4 @@ Uppdateras vid varje ändring av sajten.
 - PLAN.md: struktur, snabbreferens och denna ändringslogg
 - Beaujolais Nouveau-affischerna i omvänd ordning, nyast först (2026 → 2020)
 - All typografi ett steg mindre: text 13 → 12 px, ordmärke 15 → 14 px
+- Tätare bakgrundsränder: upprepas var 6:e px i stället för var 8:e
