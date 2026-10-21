@@ -10,7 +10,8 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - Mats Mac: Node v26, utvecklar i VS Code
 - **Astro** (statisk sajt), bilder via `astro:assets` (automatiska storlekar, WebP/AVIF, lazy loading)
 - Typsnitt via npm/Fontsource: `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` (självhostade)
-- Git + GitHub, deploy till **Netlify** (eller GitHub Pages)
+- Git + GitHub (publikt repo `mawini-studio/mawini-web`), deploy till **GitHub Pages** via GitHub Actions (Astros officiella workflow, `.github/workflows/deploy.yml`), körs vid varje push till `main`
+- Egen domän: `public/CNAME` innehåller `mawini.com`
 - DNS ligger kvar hos **Loopia** (Starter-konto, ingen FTP-hosting)
 
 ## Design
@@ -55,8 +56,8 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - Bildkonvertering: skript som skalar källbilder till ca 2400 px, JPG-kvalitet ~85, innan de läggs i src/ (håller nere repots storlek, nu ca 70 MB)
 
 ## Lansering (när sajten är klar)
-1. Deploya till Netlify, testa på tillfällig URL
-2. Loopia: ta bort vidarebefordran på mawini.com, lägg A/CNAME mot Netlify
+1. Testa lokalt med `npm run build && npm run preview`. Aktivera GitHub Pages (Settings → Pages → Source: GitHub Actions). Obs: adressen mawini-studio.github.io/mawini-web/ visar inte sajten korrekt, eftersom den byggs för domänroten (mawini.com)
+2. Loopia: ta bort vidarebefordran på mawini.com. Lägg A-poster för mawini.com mot 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 (AAAA: 2606:50c0:8000::153 … 8003::153) och CNAME för www mot `mawini-studio.github.io`. Ange mawini.com som Custom domain under Settings → Pages
 3. **Rör inte MX-posterna** (e-post info@ / mats@mawini.com, mats@killershark.se)
 4. mawini.se, mawini.eu, killershark.se, matswnilsson.se → vidarebefordra till https://mawini.com
 5. Kontrollera HTTPS, avpublicera Wix
@@ -76,3 +77,23 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - [x] Bygga layout
 - [x] Galleri + lightbox
 - [ ] Deploy + DNS-byte
+
+## Snabbreferens för Mats
+**Redigera själv**
+- Texter och kontaktuppgifter: `src/content/texter.md`
+- Galleriets ordning och alt-texter: `src/content/galleri.yaml`
+
+**Lägga till en bild**
+1. Lägg bildfilen i `src/assets/gallery/<kategori>/` (graphic-design, photography, illustration eller other). Filnamn utan mellanslag, å/ä/ö och inledande bindestreck.
+2. Lägg till en post i `src/content/galleri.yaml` där bilden ska synas i ordningen:
+   ```yaml
+   - file: filnamn.jpg
+     category: photography
+     alt: Kort beskrivning av bilden
+   ```
+3. Spara – bilden syns direkt på dev-servern. Fel kategori, saknad alt eller fel filnamn stoppar bygget med ett tydligt felmeddelande.
+
+**VS Code**
+- ⌘P öppnar en fil snabbt om du skriver en del av namnet, t.ex. *texter*
+- ⇧⌘V förhandsvisar markdown formaterat
+- Ändrade filer markeras med **M** i Explorer tills de är committade
