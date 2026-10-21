@@ -42,9 +42,10 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
-- Ordningen i filen = ordningen i galleriet. Läses via content collection (`src/content.config.ts`), som validerar fälten
+- Galleriet har två sektioner, var och en med eget justified grid: först **design** (allt som inte är foto: graphic-design, illustration, other), sedan **photography**. Rubrikerna är feta, samma storlek som brödtexten, och texten står i `src/content/texter.md` (`gallery.design`, `gallery.photography`)
+- Ordningen inom varje sektion = ordningen i galleri.yaml. Läses via content collection (`src/content.config.ts`), som validerar fälten
 - Bildfilerna ligger i `src/assets/gallery/<category>/`. Ett felstavat filnamn stoppar bygget med ett tydligt fel
-- Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger
+- Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger. Lightboxen bläddrar genom alla bilder i en följd (design → photography → tillbaka till början)
 - **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
 - Alt-text på alla bilder (fältet `alt`)
 - Kategorier: graphic-design, photography, illustration, other
@@ -76,7 +77,10 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - [x] Sätta upp Astro-projekt + Git
 - [x] Bygga layout
 - [x] Galleri + lightbox
-- [ ] Deploy + DNS-byte
+- [x] Deploy till GitHub Pages + DNS-byte för mawini.com (2026-10-21)
+- [x] Enforce HTTPS i GitHub
+- [x] mawini.se, mawini.eu, killershark.se, matswnilsson.se → 301 till https://mawini.com (Loopia)
+- [ ] Avpublicera Wix-sajten och säg upp ev. Wix-abonnemang
 
 ## Snabbreferens för Mats
 **Redigera själv**

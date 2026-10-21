@@ -2,6 +2,7 @@
 import type { ImageMetadata } from 'astro';
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import { texter, inline } from '../data/texter';
 
 // Bilderna och deras ordning kommer från src/content/galleri.yaml
 const gallery = (await getCollection('galleri'))
@@ -27,33 +28,44 @@ const items = await Promise.all(
     return { item, src, full, caption, ratio: src.width / src.height };
   }),
 );
+
+// Två sektioner: först allt som inte är foto, sedan foton.
+// Ordningen inom varje sektion följer galleri.yaml.
+const sections = [
+  { heading: texter.gallery.design, items: items.filter(({ item }) => item.category !== 'photography') },
+  { heading: texter.gallery.photography, items: items.filter(({ item }) => item.category === 'photography') },
+].filter((section) => section.items.length > 0);
 ---
 
-<section class="gallery" aria-label="Selected work">
-  <ul class="grid">
-    {
-      items.map(({ item, src, full, caption, ratio }, i) => (
-        <li style={`--ar: ${ratio.toFixed(4)}`}>
-          <a
-            href={full.src}
-            data-index={i}
-            data-full={full.src}
-            data-caption={caption || undefined}
-            data-category={item.category}
-          >
-            <Image
-              src={src}
-              alt={item.alt}
-              widths={[400, 700, 1000, 1400]}
-              sizes="(max-width: 640px) 60vw, 360px"
-              loading={i < 6 ? 'eager' : 'lazy'}
-            />
-          </a>
-        </li>
-      ))
-    }
-  </ul>
-</section>
+<div class="gallery">
+  {
+    sections.map((section, s) => (
+      <section aria-labelledby={`gallery-heading-${s}`}>
+        <h2 class="gallery-heading" id={`gallery-heading-${s}`} set:html={inline(section.heading)} />
+        <ul class="grid">
+          {section.items.map(({ item, src, full, caption, ratio }, i) => (
+            <li style={`--ar: ${ratio.toFixed(4)}`}>
+              <a
+                href={full.src}
+                data-full={full.src}
+                data-caption={caption || undefined}
+                data-category={item.category}
+              >
+                <Image
+                  src={src}
+                  alt={item.alt}
+                  widths={[400, 700, 1000, 1400]}
+                  sizes="(max-width: 640px) 60vw, 360px"
+                  loading={s === 0 && i < 6 ? 'eager' : 'lazy'}
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
 
 <dialog class="lightbox" aria-label="Image viewer">
   <figure>
@@ -72,6 +84,17 @@ const items = await Promise.all(
 </dialog>
 
 <style>
+  .gallery-heading {
+    margin: 0 0 0.75rem;
+    font-size: inherit;
+    font-weight: 600;
+    line-height: inherit;
+  }
+
+  section + section .gallery-heading {
+    margin-top: 2rem;
+  }
+
   .grid {
     --row-h: 260px;
     display: flex;
@@ -252,23 +275,21 @@ const items = await Promise.all(
   // att varje rads höjd hamnar så nära --row-h som möjligt. Radens höjd sätts
   // som --h så att flex-basis summerar till exakt en rad (flexbox radbryter
   // på flex-basis, före krympning).
-  const grid = document.querySelector<HTMLUListElement>('.grid')!;
-  const tiles = [...grid.querySelectorAll<HTMLLIElement>(':scope > li:not(.break)')];
-
-  function setRow(from: number, to: number, height: number) {
-    // Avrunda nedåt så att avrundningsfel aldrig skickar sista bilden till nästa rad
-    const h = `${Math.floor(height * 10) / 10 - 0.1}px`;
-    for (let k = from; k <= to; k++) tiles[k].style.setProperty('--h', h);
-  }
-
-  function layout() {
+  function layout(grid: HTMLUListElement) {
     grid.querySelectorAll(':scope > li.break').forEach((el) => el.remove());
+    const tiles = [...grid.querySelectorAll<HTMLLIElement>(':scope > li')];
     tiles.forEach((li) => li.style.removeProperty('--h'));
     const style = getComputedStyle(grid);
     const width = grid.clientWidth;
     const target = parseFloat(style.getPropertyValue('--row-h'));
     const gap = parseFloat(style.columnGap) || 0;
     const ratios = tiles.map((li) => parseFloat(li.style.getPropertyValue('--ar')));
+
+    function setRow(from: number, to: number, height: number) {
+      // Avrunda nedåt så att avrundningsfel aldrig skickar sista bilden till nästa rad
+      const h = `${Math.floor(height * 10) / 10 - 0.1}px`;
+      for (let k = from; k <= to; k++) tiles[k].style.setProperty('--h', h);
+    }
 
     const heightOf = (sum: number, n: number) => (width - gap * (n - 1)) / sum;
     let start = 0;
@@ -296,15 +317,19 @@ const items = await Promise.all(
     }
   }
 
-  layout();
-  let lastWidth = grid.clientWidth;
-  new ResizeObserver(() => {
-    if (grid.clientWidth !== lastWidth) {
-      lastWidth = grid.clientWidth;
-      layout();
-    }
-  }).observe(grid);
+  // Ett grid per sektion
+  document.querySelectorAll<HTMLUListElement>('.grid').forEach((grid) => {
+    layout(grid);
+    let lastWidth = grid.clientWidth;
+    new ResizeObserver(() => {
+      if (grid.clientWidth !== lastWidth) {
+        lastWidth = grid.clientWidth;
+        layout(grid);
+      }
+    }).observe(grid);
+  });
 
+  // Lightboxen bläddrar genom alla bilder i sidans ordning, över sektionerna
   const dialog = document.querySelector<HTMLDialogElement>('.lightbox')!;
   const img = dialog.querySelector('img')!;
   const caption = dialog.querySelector('figcaption')!;

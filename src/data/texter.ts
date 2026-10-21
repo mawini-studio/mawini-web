@@ -7,6 +7,10 @@ export interface Texter {
   tagline: string;
   categories: string;
   footer: string;
+  gallery: {
+    design: string;
+    photography: string;
+  };
   contact: {
     email: string;
     phone: string;
