@@ -13,6 +13,8 @@ import { texter, About, inline } from '../data/texter';
       <Logo size={64} />
     </header>
 
+    <hr />
+
     <section class="intro">
       <p class="tagline" set:html={inline(texter.tagline)} />
       <p class="categories" set:html={inline(texter.categories)} />
@@ -59,10 +61,6 @@ import { texter, About, inline } from '../data/texter';
     font-size: var(--wordmark-size);
     letter-spacing: 0.35em;
     text-transform: lowercase;
-  }
-
-  .intro {
-    margin-top: clamp(2rem, 6vw, 3.5rem);
   }
 
   .tagline {

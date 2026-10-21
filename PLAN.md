@@ -51,7 +51,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 
 ## Eventuellt senare
 - Ruta runt länkar (vit botten, tunn orange ram)
-- Kategorifilter
+- Kategorifilter (OBS: synliga kategorier är nu "design / photography / code / other" medan bildmapparna heter graphic-design, photography, illustration, other – namnen behöver matchas om filter byggs)
 - Case-sidor (t.ex. Beaujolais Nouveau-serien)
 - Bildkonvertering: skript som skalar källbilder till ca 2400 px, JPG-kvalitet ~85, innan de läggs i src/ (håller nere repots storlek, nu ca 70 MB)
 

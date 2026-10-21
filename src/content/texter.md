@@ -4,7 +4,7 @@
 
 wordmark: mawini studio
 tagline: creator of things
-categories: graphic design / photography / illustration / other
+categories: design / photography / code / other
 footer: © mmxxvi mawini
 
 contact:
@@ -23,6 +23,6 @@ meta:
 
 **graphic design + photography** 30+ years in the business. stockholm based. working independently as well as in collaboration with clients and agencies.
 
-**competence** spans a wide range — graphic design, brand identity, art direction, photography, game design, motion graphics, illustration, copywriting — for clients ranging from ambitious startups to established global brands.
+**competence** spans a wide range — graphic design, brand identity, art direction, photography, game design, motion graphics, illustration, copywriting, coding (web, apps, games) — for clients ranging from ambitious startups to established global brands.
 
-**driven by** a deep interest in art, design, photography and architecture.
+**driven by** a deep interest in art, design, photography, architecture and technology.
