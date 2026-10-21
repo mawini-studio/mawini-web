@@ -133,3 +133,4 @@ Uppdateras vid varje ändring av sajten.
 - Beaujolais Nouveau-affischerna i omvänd ordning, nyast först (2026 → 2020)
 - All typografi ett steg mindre: text 13 → 12 px, ordmärke 15 → 14 px
 - Tätare bakgrundsränder: upprepas var 6:e px i stället för var 8:e
+- Lika mycket luft ovanför loggan som mellan loggan och linjen (32 px på alla skärmar)
