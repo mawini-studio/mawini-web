@@ -21,6 +21,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Text | `#111` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
+| Textstorlek | 13 px överallt (även mobil), radavstånd 1.5. Ordmärke 15 px. CSS-variabler i `src/styles/global.css` |
 
 - Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
 - Avdelare: streckade orange linjer
@@ -33,16 +34,25 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 4. Om-text
 5. Footer
 
+## Texter
+- Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
+- Frontmatter: ordmärke, intro, kategorier, footer, kontaktlänkar och meta (sidtitel, beskrivning)
+- Brödtexten är om-texten. `**fetstil**` fungerar både i brödtexten och i frontmatter-fälten
+
 ## Galleri
+- Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
+- Ordningen i filen = ordningen i galleriet. Läses via content collection (`src/content.config.ts`), som validerar fälten
+- Bildfilerna ligger i `src/assets/gallery/<category>/`. Ett felstavat filnamn stoppar bygget med ett tydligt fel
 - Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger
-- **Inga bildtexter** visas. Datafilen har valfria fält (titel, kund, år) som bara visas om ifyllda
-- Alt-text på alla bilder (`material/bildlista.md`)
-- Kategorimappar: graphic-design, photography, illustration, other
+- **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
+- Alt-text på alla bilder (fältet `alt`)
+- Kategorier: graphic-design, photography, illustration, other
 
 ## Eventuellt senare
 - Ruta runt länkar (vit botten, tunn orange ram)
 - Kategorifilter
 - Case-sidor (t.ex. Beaujolais Nouveau-serien)
+- Bildkonvertering: skript som skalar källbilder till ca 2400 px, JPG-kvalitet ~85, innan de läggs i src/ (håller nere repots storlek, nu ca 70 MB)
 
 ## Lansering (när sajten är klar)
 1. Deploya till Netlify, testa på tillfällig URL
@@ -52,14 +62,17 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 5. Kontrollera HTTPS, avpublicera Wix
 
 ## Öppna frågor
-- Filnamn som börjar med `-` döps om vid import (t.ex. `-dsc2079.jpeg` → `dsc2079.jpg`)
+- (inga just nu)
+
+## Beslut
+- Filnamn som börjar med `-` döps om vid import (t.ex. `-dsc2079.jpeg` → `dsc2079.jpg`); bilderna ligger i `src/assets/gallery/<kategori>/`
 
 ## Status
 - [x] Spec: färger, typsnitt, länkstil
 - [x] Domän/hosting-plan
 - [x] Material: logga + första bildurval
-- [x] Texter och kontaktlänkar (`material/texter.md`)
-- [ ] Sätta upp Astro-projekt + Git
-- [ ] Bygga layout
-- [ ] Galleri + lightbox
+- [x] Texter och kontaktlänkar (`src/content/texter.md`)
+- [x] Sätta upp Astro-projekt + Git
+- [x] Bygga layout
+- [x] Galleri + lightbox
 - [ ] Deploy + DNS-byte

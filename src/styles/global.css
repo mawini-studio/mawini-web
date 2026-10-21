@@ -7,6 +7,11 @@
   --sans: 'IBM Plex Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
   --gap: 6px;
+
+  /* Typografi – samma storlek på alla skärmar */
+  --text-size: 13px;
+  --wordmark-size: 15px;
+  --line-height: 1.5;
 }
 
 *,
@@ -22,8 +27,8 @@ html {
 body {
   margin: 0;
   font-family: var(--sans);
-  font-size: 1rem;
-  line-height: 1.55;
+  font-size: var(--text-size);
+  line-height: var(--line-height);
   color: var(--text);
   background-color: var(--paper);
   background-image: repeating-linear-gradient(
