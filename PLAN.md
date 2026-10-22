@@ -157,3 +157,4 @@ Uppdateras vid varje ändring av sajten.
 - Strängare felkontroll: egen loader för galleri.yaml så att ogiltig YAML stoppar bygget i stället för att publicera tomt/gammalt galleri; dubbletter och felaktiga par ger tydliga fel
 - Lightboxen visar ett bildpar tillsammans som ett steg, staplat som i gridet och skalat så att båda bilderna ryms i fönstret; pilar, tangentbord och swipe går vidare till nästa post
 - Testparet borttaget: `dsc2558.jpg` och `l1032298.jpg` är två vanliga bilder igen (stödet för bildpar finns kvar)
+- Beaujolais Nouveau-affischerna som bildpar: 2025+2024, 2023+2022, 2021+2020 (2026 ensam)
