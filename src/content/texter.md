@@ -5,8 +5,8 @@
 
 wordmark: mawini studio
 tagline: creator of things
-# [text](#mål) blir en länk: #design, #photography och #about är platser på sidan
-categories: "[design](#design) / [photography](#photography) / code / other / [about](#about)"
+# [text](#mål) blir en länk: #design, #photography, #about och #contact är platser på sidan
+categories: "[design](#design) / [photography](#photography) / code / other / [about](#about) / [contact](#contact)"
 # {year} blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 footer: "© {year} mawini"
 
@@ -15,7 +15,11 @@ gallery:
   design: design
   photography: photography
 
+# Kontaktuppgifterna används både av ikonerna i introt och av kontaktsektionen
+# längst ner. heading är sektionens rubrik. Instagram visas som @namn,
+# hämtat ur adressen.
 contact:
+  heading: contact
   email: mats@mawini.com
   phone: "+46 732 622 660"
   instagram: https://instagram.com/mawini.studio/

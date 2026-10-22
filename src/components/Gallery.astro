@@ -64,7 +64,7 @@ const sections = [
   {
     sections.map((section, s) => (
       <section id={section.id} class="gallery-section" aria-labelledby={`gallery-heading-${s}`}>
-        <h2 class="gallery-heading" id={`gallery-heading-${s}`} set:html={inline(section.heading)} />
+        <h2 class="section-heading gallery-heading" id={`gallery-heading-${s}`} set:html={inline(section.heading)} />
         <ul class="grid">
           {section.tiles.map((tile, i) => (
             <li
@@ -119,13 +119,6 @@ const sections = [
 </dialog>
 
 <style>
-  .gallery-heading {
-    margin: 0 0 0.75rem;
-    font-size: inherit;
-    font-weight: 400;
-    line-height: inherit;
-  }
-
   section + section .gallery-heading {
     margin-top: 2rem;
   }

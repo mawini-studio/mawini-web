@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
 import ContactIcons from '../components/ContactIcons.astro';
 import Gallery from '../components/Gallery.astro';
-import { texter, About, inline } from '../data/texter';
+import { texter, About, inline, contactLinks } from '../data/texter';
 import { toRoman } from '../lib/roman';
 
 // {year} i sidfoten: året vid bygget, uppdateras i webbläsaren (se skriptet nedan)
@@ -36,6 +36,23 @@ const footer = inline(texter.footer).replace(
 
     <section class="about" id="about" aria-label="About">
       <About />
+    </section>
+
+    <hr />
+
+    <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+      <h2 class="section-heading" id="contact-heading" set:html={inline(texter.contact.heading)} />
+      <ul class="contact-list">
+        {
+          contactLinks(texter.contact).map(({ href, text, external }) => (
+            <li>
+              <a href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
+                {text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
     <hr />
@@ -134,6 +151,12 @@ const footer = inline(texter.footer).replace(
 
   .about :global(p) {
     margin: 0 0 1rem;
+  }
+
+  .contact-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .site-footer p {

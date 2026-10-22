@@ -12,6 +12,7 @@ export interface Texter {
     photography: string;
   };
   contact: {
+    heading: string;
     email: string;
     phone: string;
     instagram: string;
@@ -36,4 +37,48 @@ export function inline(text: string): string {
     .replace(/"/g, '&quot;')
     .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
     .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+}
+
+// Kontaktlänkarna, byggda en gång ur texter.md så att ikonerna i introt och
+// kontaktsektionen alltid visar samma uppgifter.
+export interface ContactLink {
+  kind: 'email' | 'phone' | 'instagram' | 'linkedin';
+  href: string;
+  text: string;
+  label: string;
+  external: boolean;
+}
+
+export function contactLinks(contact: Texter['contact']): ContactLink[] {
+  const handle = new URL(contact.instagram).pathname.split('/').filter(Boolean)[0];
+  return [
+    {
+      kind: 'email',
+      href: `mailto:${contact.email}`,
+      text: contact.email,
+      label: `E-mail ${contact.email}`,
+      external: false,
+    },
+    {
+      kind: 'phone',
+      href: `tel:${contact.phone.replace(/[^+\d]/g, '')}`,
+      text: contact.phone,
+      label: `Call ${contact.phone}`,
+      external: false,
+    },
+    {
+      kind: 'instagram',
+      href: contact.instagram,
+      text: `@${handle}`,
+      label: `Instagram @${handle}`,
+      external: true,
+    },
+    {
+      kind: 'linkedin',
+      href: contact.linkedin,
+      text: 'LinkedIn',
+      label: 'LinkedIn',
+      external: true,
+    },
+  ];
 }

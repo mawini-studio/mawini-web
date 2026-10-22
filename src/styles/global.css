@@ -24,7 +24,16 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Mjuk scrollning till #design, #photography och #about, utom när
+/* Sektionsrubriker (design, photography, contact): samma storlek och vikt
+   som brödtexten */
+.section-heading {
+  margin: 0 0 0.75rem;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: inherit;
+}
+
+/* Mjuk scrollning till #design, #photography, #about och #contact, utom när
    användaren har bett om minskad rörelse */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -36,7 +45,8 @@ html {
 :target,
 #design,
 #photography,
-#about {
+#about,
+#contact {
   scroll-margin-top: 1.5rem;
 }
 

@@ -31,10 +31,11 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 ## Struktur
 1. Header: "mawini studio" + rund logga (inline-SVG i `src/components/Logo.astro`, från `material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600). Favicon: `public/favicon.svg`
 2. Streckad linje
-3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about", kontaktikoner. "design", "photography" och "about" är länkar till `#design`, `#photography` och `#about` (galleriets sektioner och om-texten): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
+3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about / contact", kontaktikoner. "design", "photography", "about" och "contact" är länkar till `#design`, `#photography`, `#about` och `#contact` (galleriets sektioner, om-texten och kontaktsektionen): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
 4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
 5. Om-text
-6. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
+6. Kontakt: rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn med sajtens vanliga länkstil. Streck ovanför och under
+7. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
 Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
 
@@ -43,7 +44,8 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 - Frontmatter: ordmärke, intro, kategorier, footer, kontaktlänkar och meta (sidtitel, beskrivning)
 - Brödtexten är om-texten. `**fetstil**` fungerar både i brödtexten och i frontmatter-fälten
 - Sidfoten: `footer: "© {year} mawini"`. `{year}` skrivs med romerska siffror vid bygget och uppdateras av ett litet skript i webbläsaren vid sidladdning (besökarens år), som också byter vid midnatt på nyårsafton i besökarens tidszon om sidan står öppen. Funktionen finns i `src/lib/roman.ts` (heltal 1–3999)
-- Länkar i frontmatter-fälten skrivs som i markdown: `[text](adress)`, t.ex. `[about](#about)`. Platser på sidan: `#design`, `#photography`, `#about`
+- Kontaktuppgifterna (`contact:` i frontmatter, med `heading` för sektionsrubriken) är enda källan för både ikonerna i introt och kontaktsektionen. Länkarna byggs av `contactLinks()` i `src/data/texter.ts`; Instagram-namnet (@…) hämtas ur adressen
+- Länkar i frontmatter-fälten skrivs som i markdown: `[text](adress)`, t.ex. `[about](#about)`. Platser på sidan: `#design`, `#photography`, `#about`, `#contact`
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
@@ -169,3 +171,4 @@ Uppdateras vid varje ändring av sajten.
 - Logotypfilen `material/logo/mawini-studio-a.svg` (och `mawini-studio-a-preview.png`) tillagd på main som material. Används inte på sajten; den nya headern som använder den finns på grenen `ny-logga`, och gamla headern är taggad `header-ordmarke`
 - Om-texten: "mats w nilsson" → "mawini studio" i första raden, "driven by" omformulerad ("a passion for …")
 - Halva luften runt introt: 16 px (var 32 px) mellan första linjen och "creator of things" och mellan kontaktikonerna och nästa linje
+- Kontaktsektion mellan om-texten och sidfoten: rubriken "contact" (Regular, som design och photography; gemensam klass `.section-heading`) och e-post, telefon, @mawini.studio och LinkedIn som länkar. " / contact" sist i menyraden. Uppgifterna hämtas från samma `contact:` i texter.md som ikonerna
