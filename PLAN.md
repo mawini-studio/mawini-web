@@ -20,7 +20,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Accent | `#FF4600` |
 | Bakgrundsränder | `#DEDEDE`, diagonala (/), tilad 8×8 px SVG som data-URI i `body` i `src/styles/global.css`: en 1 px linje ritad som pixelsteg, `background-size: 8px 8px`. Ger jämna linjer utan moiré på 1x och 2x. Färgen står som `fill='%23dedede'` i SVG:n (kan inte vara CSS-variabel) |
 | Text | `#111` |
-| Ordmärke | Logotypen `material/logo/mawini-studio-a.svg` (pixeltypsnitt, konturer som fyllda ytor, #FF4600). 313 px bred på desktop/surfplatta, 209 px på smala skärmar med 3x, 156,5 px på smala skärmar med 2x |
+| Ordmärke | Logotypen `material/logo/mawini-studio-a.svg` (pixeltypsnitt, konturer som fyllda ytor, #FF4600). 156,5 px bred på desktop/surfplatta och smala skärmar med 2x, 209 px på smala skärmar med 3x |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
 | Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. CSS-variabler i `src/styles/global.css` |
 
@@ -29,8 +29,8 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
-1. Header: logotypen "mawini studio" (`src/components/Wordmark.astro`, läser `material/logo/mawini-studio-a.svg`) som länk till toppen (`#top`, aria-label "mawini studio" från `wordmark` i texter.md). Till höger en tom plats (`.header-slot`, 32×32 px) för en kommande hamburgermeny. Favicon: `public/favicon.svg` (den runda mwn-loggan)
-   - Skärpa: konturerna är tunna pixellinjer, så pathen avrundas vid bygget till pixelrutnätet för varje visningsstorlek (`src/lib/pixel-path.ts`). Varje storlek väljs så att linjen blir ett helt antal enhetspixlar: 313 px → 1 px (1x/2x/3x), 209 px → 2 enhetspx på 3x, 156,5 px → 1 enhetspx på 2x. Kontrollerat i skärmdumpar: inga kantutjämnade mellantoner, jämn linjebredd. Bara `shape-rendering="crispEdges"` räckte inte, Chrome kantutjämnade ändå
+1. Header: logotypen "mawini studio" (`src/components/Wordmark.astro`, läser `material/logo/mawini-studio-a.svg`) som länk till toppen (`#top`, aria-label "mawini studio" från `wordmark` i texter.md). Till höger en tom plats (`.header-slot`, 32 px bred, lika hög som loggan) för en kommande hamburgermeny. Favicon: `public/favicon.svg` (den runda mwn-loggan)
+   - Skärpa: konturerna är tunna pixellinjer, så pathen avrundas vid bygget till pixelrutnätet för varje visningsstorlek (`src/lib/pixel-path.ts`). Varje storlek väljs så att linjen blir ett helt antal enhetspixlar: 156,5 px → 1 enhetspx på 2x (retina), 209 px → 2 enhetspx på 3x. På 2x är 156,5 och 313 px de enda skarpa storlekarna; däremellan blir linjerna suddiga eller ojämna. På 1x-skärmar blir linjerna vid 156,5 px halva pixlar och därför lite svaga. Kontrollerat i skärmdumpar: inga kantutjämnade mellantoner, jämn linjebredd. Bara `shape-rendering="crispEdges"` räckte inte, Chrome kantutjämnade ändå
    - Den tidigare headern (textordmärke + rund mwn-logga) finns kvar som git-taggen `header-ordmarke`
 2. Streckad linje
 3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about", kontaktikoner. "design", "photography" och "about" är länkar till `#design`, `#photography` och `#about` (galleriets sektioner och om-texten): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
@@ -177,3 +177,4 @@ Uppdateras vid varje ändring av sajten.
 - Git-taggen `header-ordmarke` på main före ändringen (gamla headern)
 - Ny header: logotypen `mawini-studio-a.svg` ersätter textordmärket, länkar till toppen; den runda mwn-loggan borttagen, platsen kvar för en hamburgermeny
 - Logotypens path avrundas till pixelrutnätet per storlek så att linjerna blir skarpa (0 kantutjämnade pixlar på desktop 1x/2x och mobil 2x/3x)
+- Mindre logga: 156,5 px bred på desktop (var 313 px), skarp på retina; mobil 3x oförändrad 209 px. Platsen för hamburgermenyn följer loggans höjd så att loggan inte hamnar på en halv pixel

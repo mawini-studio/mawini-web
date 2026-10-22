@@ -96,11 +96,12 @@ const footer = inline(texter.footer).replace(
     line-height: 0;
   }
 
-  /* Tom plats till höger för en kommande hamburgermeny */
+  /* Tom plats till höger för en kommande hamburgermeny. Höjden följer
+     loggan (stretch), så att loggan inte centreras på en halv pixel. */
   .header-slot {
     flex: none;
+    align-self: stretch;
     width: 32px;
-    height: 32px;
   }
 
   .tagline {
