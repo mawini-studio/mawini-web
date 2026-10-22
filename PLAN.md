@@ -164,3 +164,6 @@ Uppdateras vid varje ändring av sajten.
 - Bakgrundsränderna ersatta med en tilad 8×8 px pixel-SVG i stället för repeating-linear-gradient, som gav moiré (45° med 6 px period = 8,49 px vågrätt). Kontrollerat pixel för pixel på 1x och 2x: 0 avvikande pixlar, jämn linjebredd, inga synliga skarvar
 - Kategoriraden fick " / about" sist; "design", "photography" och "about" länkar till respektive plats på sidan med mjuk scrollning (respekterar prefers-reduced-motion). Markdown-länkar fungerar nu i texter.md:s frontmatter-fält
 - Automatiskt årtal i sidfoten: `{year}` i texter.md blir innevarande år med romerska siffror; skrivs vid bygget och uppdateras i webbläsaren, byter vid midnatt på nyårsafton i besökarens tidszon. Testat: 2026–2099 m.fl. samt alla tal 1–3999, och årsskifte i Auckland/Stockholm med simulerad klocka
+
+**2026-10-22**
+- Logotypfilen `material/logo/mawini-studio-a.svg` (och `mawini-studio-a-preview.png`) tillagd på main som material. Används inte på sajten; den nya headern som använder den finns på grenen `ny-logga`, och gamla headern är taggad `header-ordmarke`
