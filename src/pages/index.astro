@@ -101,6 +101,17 @@ const footer = inline(texter.footer).replace(
     font-weight: 600;
   }
 
+  /* Halva luften (16 px) mellan linjerna och introt: under första linjen
+     och ovanför linjen efter kontaktikonerna. Luften mellan loggan och
+     första linjen är kvar på 32 px. */
+  hr:has(+ .intro) {
+    margin-bottom: 1rem;
+  }
+
+  .intro + hr {
+    margin-top: 1rem;
+  }
+
   /* Länkarna i kategoriraden ser ut som texten och blir orange vid hover/fokus */
   .categories :global(a) {
     color: inherit;

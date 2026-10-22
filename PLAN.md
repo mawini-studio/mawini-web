@@ -25,7 +25,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
 
 - Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
-- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern
+- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern. Luft 32 px på var sida, utom runt introt: 16 px mellan första linjen och "creator of things" och 16 px mellan kontaktikonerna och nästa linje
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
@@ -168,3 +168,4 @@ Uppdateras vid varje ändring av sajten.
 **2026-10-22**
 - Logotypfilen `material/logo/mawini-studio-a.svg` (och `mawini-studio-a-preview.png`) tillagd på main som material. Används inte på sajten; den nya headern som använder den finns på grenen `ny-logga`, och gamla headern är taggad `header-ordmarke`
 - Om-texten: "mats w nilsson" → "mawini studio" i första raden, "driven by" omformulerad ("a passion for …")
+- Halva luften runt introt: 16 px (var 32 px) mellan första linjen och "creator of things" och mellan kontaktikonerna och nästa linje
