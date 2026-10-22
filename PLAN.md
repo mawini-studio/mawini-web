@@ -182,3 +182,4 @@ Uppdateras vid varje ändring av sajten.
 - Kontaktlänkarna utan understrykning, orange vid hover (`.plain-links`, även menyraden)
 - "creator of things" i Regular i stället för fetstil
 - 16 px luft mellan alla sektioner och linjerna (var 32 px runt galleriet, om-texten och sidfoten, och 38 px mellan design och photography); 6 px mellan rubrik och bilder i design och photography. Headern oförändrad (32 px). Klassen `.section-compact` borttagen, eftersom 16 px nu är standard
+- Om-texten helt i Regular: fetstilen (`**…**`) på de inledande orden borttagen i texter.md
