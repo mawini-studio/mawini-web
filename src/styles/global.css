@@ -24,6 +24,22 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Mjuk scrollning till #design, #photography och #about, utom när
+   användaren har bett om minskad rörelse */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Luft ovanför målet så att rubriken inte hamnar kant i kant med fönstret */
+:target,
+#design,
+#photography,
+#about {
+  scroll-margin-top: 1.5rem;
+}
+
 body {
   margin: 0;
   font-family: var(--sans);

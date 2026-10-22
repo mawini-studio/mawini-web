@@ -26,11 +26,14 @@ export interface Texter {
 export const texter = frontmatter as Texter;
 export { About };
 
-// **fetstil** i frontmatter-fält → <b>, övrig text HTML-escapas
+// I frontmatter-fält: **fetstil** → <b>, [text](adress) → <a>.
+// Övrig text HTML-escapas.
 export function inline(text: string): string {
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    .replace(/"/g, '&quot;')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
 }

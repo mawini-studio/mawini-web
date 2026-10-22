@@ -1,10 +1,12 @@
 ---
 # Alla texter och kontaktuppgifter för mawini.com. Redigera fritt.
 # **fetstil** fungerar både här i fälten och i om-texten nedanför.
+# Länkar skrivs som i markdown: [text](adress), t.ex. [about](#about).
 
 wordmark: mawini studio
 tagline: creator of things
-categories: design / photography / code / other
+# [text](#mål) blir en länk: #design, #photography och #about är platser på sidan
+categories: "[design](#design) / [photography](#photography) / code / other / [about](#about)"
 footer: © mmxxvi mawini
 
 # Rubriker för galleriets två sektioner

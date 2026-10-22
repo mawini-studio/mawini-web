@@ -27,7 +27,7 @@ import { texter, About, inline } from '../data/texter';
 
     <hr />
 
-    <section class="about" aria-label="About">
+    <section class="about" id="about" aria-label="About">
       <About />
     </section>
 
@@ -68,6 +68,17 @@ import { texter, About, inline } from '../data/texter';
   .tagline {
     margin: 0;
     font-weight: 600;
+  }
+
+  /* Länkarna i kategoriraden ser ut som texten och blir orange vid hover/fokus */
+  .categories :global(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .categories :global(a:hover),
+  .categories :global(a:focus-visible) {
+    color: var(--accent);
   }
 
   .categories {

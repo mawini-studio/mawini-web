@@ -55,15 +55,15 @@ const tiles = await Promise.all(
 // Två sektioner: först allt som inte är foto, sedan foton.
 // Ordningen inom varje sektion följer galleri.yaml.
 const sections = [
-  { heading: texter.gallery.design, tiles: tiles.filter((tile) => !tile.photo) },
-  { heading: texter.gallery.photography, tiles: tiles.filter((tile) => tile.photo) },
+  { id: 'design', heading: texter.gallery.design, tiles: tiles.filter((tile) => !tile.photo) },
+  { id: 'photography', heading: texter.gallery.photography, tiles: tiles.filter((tile) => tile.photo) },
 ].filter((section) => section.tiles.length > 0);
 ---
 
 <div class="gallery">
   {
     sections.map((section, s) => (
-      <section aria-labelledby={`gallery-heading-${s}`}>
+      <section id={section.id} class="gallery-section" aria-labelledby={`gallery-heading-${s}`}>
         <h2 class="gallery-heading" id={`gallery-heading-${s}`} set:html={inline(section.heading)} />
         <ul class="grid">
           {section.tiles.map((tile, i) => (
