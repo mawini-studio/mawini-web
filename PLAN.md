@@ -167,3 +167,4 @@ Uppdateras vid varje ändring av sajten.
 
 **2026-10-22**
 - Logotypfilen `material/logo/mawini-studio-a.svg` (och `mawini-studio-a-preview.png`) tillagd på main som material. Används inte på sajten; den nya headern som använder den finns på grenen `ny-logga`, och gamla headern är taggad `header-ordmarke`
+- Om-texten: "mats w nilsson" → "mawini studio" i första raden, "driven by" omformulerad ("a passion for …")
