@@ -76,6 +76,7 @@ const sections = [
                   href={full.src}
                   style={tile.kind === 'pair' ? `--ar: ${ratio.toFixed(4)}` : undefined}
                   data-full={full.src}
+                  data-ar={ratio.toFixed(4)}
                   data-caption={caption || undefined}
                   data-category={item.category}
                 >
@@ -97,10 +98,15 @@ const sections = [
 </div>
 
 <dialog class="lightbox" aria-label="Image viewer">
-  <figure>
-    <img alt="" />
-    <figcaption hidden></figcaption>
-  </figure>
+  <div class="lb-stage">
+    <figure>
+      <div class="lb-stack">
+        <img alt="" />
+        <img alt="" hidden />
+      </div>
+      <figcaption hidden></figcaption>
+    </figure>
+  </div>
   <button class="lb-btn lb-close" type="button" aria-label="Close">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg>
   </button>
@@ -219,20 +225,38 @@ const sections = [
     }
   }
 
+  /* Ytan som en bild eller ett bildpar skalas in i (marginal för knapparna) */
+  .lb-stage {
+    position: absolute;
+    inset: 3rem 4rem;
+    display: grid;
+    place-items: center;
+    touch-action: pan-y;
+  }
+
   figure {
     margin: 0;
     display: grid;
     justify-items: center;
     gap: 0.75rem;
-    touch-action: pan-y;
   }
 
-  figure img {
-    max-width: calc(100vw - 8rem);
-    max-height: calc(100dvh - 6rem);
-    width: auto;
+  /* En bild, eller ett par staplat med samma mellanrum som i gridet.
+     Bredden sätts av skriptet så att allt ryms i .lb-stage. */
+  .lb-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  /* global.css sätter img { display: block }, som annars vinner över hidden */
+  .lb-stack img[hidden] {
+    display: none;
+  }
+
+  .lb-stack img {
+    width: 100%;
     height: auto;
-    object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
   }
@@ -240,6 +264,7 @@ const sections = [
   figcaption {
     font-family: var(--mono);
     color: #555;
+    text-align: center;
   }
 
   .lb-btn {
@@ -288,9 +313,8 @@ const sections = [
   }
 
   @media (max-width: 640px) {
-    figure img {
-      max-width: 100vw;
-      max-height: calc(100dvh - 8rem);
+    .lb-stage {
+      inset: 4rem 0;
     }
 
     .lb-prev,
@@ -374,46 +398,92 @@ const sections = [
     }).observe(grid);
   });
 
-  // Lightboxen bläddrar genom alla bilder i sidans ordning, över sektionerna
+  // Lightboxen bläddrar genom gridets poster i sidans ordning, över sektionerna.
+  // Ett bildpar är en post och visas staplat precis som i gridet.
   const dialog = document.querySelector<HTMLDialogElement>('.lightbox')!;
-  const img = dialog.querySelector('img')!;
+  const stage = dialog.querySelector<HTMLElement>('.lb-stage')!;
+  const stack = dialog.querySelector<HTMLElement>('.lb-stack')!;
+  const imgs = [...stack.querySelectorAll('img')];
   const caption = dialog.querySelector('figcaption')!;
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('.grid a[data-full]')];
+
+  interface Step {
+    links: HTMLAnchorElement[];
+    ratios: number[];
+  }
+
+  const steps: Step[] = [...document.querySelectorAll<HTMLLIElement>('.grid > li:not(.break)')].map((li) => {
+    const links = [...li.querySelectorAll<HTMLAnchorElement>('a[data-full]')];
+    return { links, ratios: links.map((a) => parseFloat(a.dataset.ar!)) };
+  });
   let current = 0;
 
   function preload(i: number) {
-    const link = links[(i + links.length) % links.length];
-    new Image().src = link.dataset.full!;
+    const step = steps[(i + steps.length) % steps.length];
+    step.links.forEach((a) => (new Image().src = a.dataset.full!));
+  }
+
+  // Skala posten så att den ryms helt i .lb-stage. Med bredden W blir höjden
+  // W/a för en bild och W/a₁ + g + W/a₂ för ett par.
+  function fit() {
+    const { ratios } = steps[current];
+    const gap = parseFloat(getComputedStyle(stack).rowGap) || 0;
+    const captionSpace = caption.hidden
+      ? 0
+      : caption.offsetHeight + (parseFloat(getComputedStyle(caption.parentElement!).rowGap) || 0);
+    const maxW = stage.clientWidth;
+    const maxH = stage.clientHeight - captionSpace;
+    const inverse = ratios.reduce((sum, a) => sum + 1 / a, 0);
+    const width = Math.max(0, Math.min(maxW, (maxH - gap * (ratios.length - 1)) / inverse));
+    stack.style.width = `${Math.floor(width)}px`;
   }
 
   function show(i: number) {
-    current = (i + links.length) % links.length;
-    const link = links[current];
-    const thumb = link.querySelector('img')!;
-    img.src = link.dataset.full!;
-    img.alt = thumb.alt;
-    const text = link.dataset.caption ?? '';
+    current = (i + steps.length) % steps.length;
+    const { links, ratios } = steps[current];
+    imgs.forEach((img, k) => {
+      const link = links[k];
+      img.hidden = !link;
+      if (!link) {
+        img.removeAttribute('src');
+        return;
+      }
+      img.src = link.dataset.full!;
+      img.alt = link.querySelector('img')!.alt;
+      img.style.aspectRatio = String(ratios[k]);
+    });
+    const text = links
+      .map((a) => a.dataset.caption)
+      .filter(Boolean)
+      .join(' / ');
     caption.textContent = text;
     caption.hidden = !text;
+    fit();
     preload(current + 1);
     preload(current - 1);
   }
 
-  links.forEach((link, i) => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      show(i);
-      dialog.showModal();
+  steps.forEach((step, i) => {
+    step.links.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        dialog.showModal();
+        show(i);
+      });
     });
+  });
+
+  window.addEventListener('resize', () => {
+    if (dialog.open) fit();
   });
 
   dialog.querySelector('.lb-prev')!.addEventListener('click', () => show(current - 1));
   dialog.querySelector('.lb-next')!.addEventListener('click', () => show(current + 1));
   dialog.querySelector('.lb-close')!.addEventListener('click', () => dialog.close());
 
-  // Klick utanför bilden stänger
+  // Klick utanför bilderna stänger
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    const target = e.target as Element;
+    if (!target.closest('img, button, figcaption')) dialog.close();
   });
 
   // Esc hanteras av <dialog>; pilar här
@@ -422,10 +492,11 @@ const sections = [
     if (e.key === 'ArrowRight') show(current + 1);
   });
 
-  // Återställ fokus till bilden i gridet när lightboxen stängs
+  // Återställ fokus till posten i gridet när lightboxen stängs
   dialog.addEventListener('close', () => {
-    links[current].focus({ preventScroll: true });
-    links[current].scrollIntoView({ block: 'nearest' });
+    const link = steps[current].links[0];
+    link.focus({ preventScroll: true });
+    link.scrollIntoView({ block: 'nearest' });
   });
 
   // Swipe
