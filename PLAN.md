@@ -18,7 +18,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Token | Värde |
 |---|---|
 | Accent | `#FF4600` |
-| Bakgrundsränder | `#DEDEDE`, diagonala, 1 px linje som upprepas var 6:e px (5 px mellanrum) |
+| Bakgrundsränder | `#DEDEDE`, diagonala (/), tilad 8×8 px SVG som data-URI i `body` i `src/styles/global.css`: en 1 px linje ritad som pixelsteg, `background-size: 8px 8px`. Ger jämna linjer utan moiré på 1x och 2x. Färgen står som `fill='%23dedede'` i SVG:n (kan inte vara CSS-variabel) |
 | Text | `#111` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
@@ -159,3 +159,4 @@ Uppdateras vid varje ändring av sajten.
 - Testparet borttaget: `dsc2558.jpg` och `l1032298.jpg` är två vanliga bilder igen (stödet för bildpar finns kvar)
 - Beaujolais Nouveau-affischerna som bildpar: 2025+2024, 2023+2022, 2021+2020 (2026 ensam)
 - Nya bildpar: Bellevue Blanc 2021 och Bellevue Rouge 2021 (etikett på flaska ovanför etikettoriginal), efter Beaujolais Nouveau-paren
+- Bakgrundsränderna ersatta med en tilad 8×8 px pixel-SVG i stället för repeating-linear-gradient, som gav moiré (45° med 6 px period = 8,49 px vågrätt). Kontrollerat pixel för pixel på 1x och 2x: 0 avvikande pixlar, jämn linjebredd, inga synliga skarvar
