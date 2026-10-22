@@ -4,6 +4,13 @@ import Logo from '../components/Logo.astro';
 import ContactIcons from '../components/ContactIcons.astro';
 import Gallery from '../components/Gallery.astro';
 import { texter, About, inline } from '../data/texter';
+import { toRoman } from '../lib/roman';
+
+// {year} i sidfoten: året vid bygget, uppdateras i webbläsaren (se skriptet nedan)
+const footer = inline(texter.footer).replace(
+  '{year}',
+  `<span data-roman-year>${toRoman(new Date().getFullYear())}</span>`,
+);
 ---
 
 <Base title={texter.meta.title} description={texter.meta.description}>
@@ -34,10 +41,34 @@ import { texter, About, inline } from '../data/texter';
     <hr />
 
     <footer class="site-footer">
-      <p set:html={inline(texter.footer)} />
+      <p set:html={footer} />
     </footer>
   </main>
 </Base>
+
+<script>
+  import { toRoman } from '../lib/roman';
+
+  // Visa besökarens innevarande år och byt vid midnatt på nyårsafton i
+  // besökarens tidszon, även om sidan står öppen över årsskiftet.
+  const MAX_DELAY = 2 ** 31 - 1; // setTimeout klarar högst ca 24,8 dygn
+
+  function update() {
+    const year = new Date().getFullYear();
+    document.querySelectorAll('[data-roman-year]').forEach((el) => {
+      el.textContent = toRoman(year);
+    });
+    waitForNewYear(year + 1);
+  }
+
+  function waitForNewYear(nextYear: number) {
+    const delay = new Date(nextYear, 0, 1).getTime() - Date.now();
+    if (delay <= 0) return update();
+    setTimeout(() => (delay > MAX_DELAY ? waitForNewYear(nextYear) : update()), Math.min(delay, MAX_DELAY));
+  }
+
+  update();
+</script>
 
 <style>
   .card {

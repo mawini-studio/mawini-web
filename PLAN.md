@@ -34,7 +34,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about", kontaktikoner. "design", "photography" och "about" är länkar till `#design`, `#photography` och `#about` (galleriets sektioner och om-texten): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
 4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
 5. Om-text
-6. Footer
+6. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
 Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
 
@@ -42,6 +42,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
 - Frontmatter: ordmärke, intro, kategorier, footer, kontaktlänkar och meta (sidtitel, beskrivning)
 - Brödtexten är om-texten. `**fetstil**` fungerar både i brödtexten och i frontmatter-fälten
+- Sidfoten: `footer: "© {year} mawini"`. `{year}` skrivs med romerska siffror vid bygget och uppdateras av ett litet skript i webbläsaren vid sidladdning (besökarens år), som också byter vid midnatt på nyårsafton i besökarens tidszon om sidan står öppen. Funktionen finns i `src/lib/roman.ts` (heltal 1–3999)
 - Länkar i frontmatter-fälten skrivs som i markdown: `[text](adress)`, t.ex. `[about](#about)`. Platser på sidan: `#design`, `#photography`, `#about`
 
 ## Galleri
@@ -162,3 +163,4 @@ Uppdateras vid varje ändring av sajten.
 - Nya bildpar: Bellevue Blanc 2021 och Bellevue Rouge 2021 (etikett på flaska ovanför etikettoriginal), efter Beaujolais Nouveau-paren
 - Bakgrundsränderna ersatta med en tilad 8×8 px pixel-SVG i stället för repeating-linear-gradient, som gav moiré (45° med 6 px period = 8,49 px vågrätt). Kontrollerat pixel för pixel på 1x och 2x: 0 avvikande pixlar, jämn linjebredd, inga synliga skarvar
 - Kategoriraden fick " / about" sist; "design", "photography" och "about" länkar till respektive plats på sidan med mjuk scrollning (respekterar prefers-reduced-motion). Markdown-länkar fungerar nu i texter.md:s frontmatter-fält
+- Automatiskt årtal i sidfoten: `{year}` i texter.md blir innevarande år med romerska siffror; skrivs vid bygget och uppdateras i webbläsaren, byter vid midnatt på nyårsafton i besökarens tidszon. Testat: 2026–2099 m.fl. samt alla tal 1–3999, och årsskifte i Auckland/Stockholm med simulerad klocka

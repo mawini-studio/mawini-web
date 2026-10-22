@@ -7,7 +7,8 @@ wordmark: mawini studio
 tagline: creator of things
 # [text](#mål) blir en länk: #design, #photography och #about är platser på sidan
 categories: "[design](#design) / [photography](#photography) / code / other / [about](#about)"
-footer: © mmxxvi mawini
+# {year} blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
+footer: "© {year} mawini"
 
 # Rubriker för galleriets två sektioner
 gallery:
