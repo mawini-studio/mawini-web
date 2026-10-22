@@ -60,6 +60,22 @@
       category: graphic-design
       alt: "Beaujolais Nouveau poster 2020, minimal line portrait on yellow"
 
+- pair:
+    - file: bellevueblanc2021a.jpg
+      category: graphic-design
+      alt: "Bellevue Blanc wine label on a bottle, engraved manor house in grey-green"
+    - file: bellevueblanc2021b.jpg
+      category: graphic-design
+      alt: "Bellevue Blanc wine label artwork, manor house line drawing in teal"
+
+- pair:
+    - file: bellevuerouge2021a.jpg
+      category: graphic-design
+      alt: "Bellevue Rouge wine label on a bottle, engraved manor house in dark red"
+    - file: bellevuerouge2021b.jpg
+      category: graphic-design
+      alt: "Bellevue Rouge wine label artwork, manor house line drawing in red"
+
 - file: octopus-chartm-a.jpg
   category: graphic-design
   alt: "Octopus mark in dark petrol blue with spiralling tentacles"

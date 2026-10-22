@@ -158,3 +158,4 @@ Uppdateras vid varje ändring av sajten.
 - Lightboxen visar ett bildpar tillsammans som ett steg, staplat som i gridet och skalat så att båda bilderna ryms i fönstret; pilar, tangentbord och swipe går vidare till nästa post
 - Testparet borttaget: `dsc2558.jpg` och `l1032298.jpg` är två vanliga bilder igen (stödet för bildpar finns kvar)
 - Beaujolais Nouveau-affischerna som bildpar: 2025+2024, 2023+2022, 2021+2020 (2026 ensam)
+- Nya bildpar: Bellevue Blanc 2021 och Bellevue Rouge 2021 (etikett på flaska ovanför etikettoriginal), efter Beaujolais Nouveau-paren
