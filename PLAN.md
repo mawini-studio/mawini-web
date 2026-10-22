@@ -24,17 +24,20 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
 | Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
 
-- Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
-- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern. Luft 32 px på var sida, utom runt introt: 16 px mellan första linjen och "creator of things" och 16 px mellan kontaktikonerna och nästa linje
+- Länkar i löptext: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
+- Länkar i menyraden och kontaktlistan (`.plain-links`): ingen understrykning, samma färg som texten runt omkring, orange vid hover och tangentbordsfokus
+- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern. Luft 32 px på var sida (galleriet, om-texten)
+- **Kompakta textsektioner** (`.section-compact` i `global.css`: introt och kontakt, och nya korta textsektioner framöver): 16 px till linjen ovanför och under, och 6 px (halva) mellan rubrik och innehåll
+- Sektionsrubriker (`.section-heading`: design, photography, contact) och "creator of things": brödtextens storlek, Regular
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
 1. Header: "mawini studio" + rund logga (inline-SVG i `src/components/Logo.astro`, från `material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600). Favicon: `public/favicon.svg`
 2. Streckad linje
-3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about / contact", kontaktikoner. "design", "photography", "about" och "contact" är länkar till `#design`, `#photography`, `#about` och `#contact` (galleriets sektioner, om-texten och kontaktsektionen): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
+3. Intro (`.section-compact`): "creator of things" (Regular), kategoriraden "design / photography / code / other / about / contact", kontaktikoner. "design", "photography", "about" och "contact" är länkar till `#design`, `#photography`, `#about` och `#contact` (galleriets sektioner, om-texten och kontaktsektionen): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
 4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
 5. Om-text
-6. Kontakt: rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn med sajtens vanliga länkstil. Streck ovanför och under
+6. Kontakt (`.section-compact`): rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn som länkar utan understrykning (`.plain-links`, orange vid hover). Streck ovanför och under
 7. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
 Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
@@ -172,3 +175,8 @@ Uppdateras vid varje ändring av sajten.
 - Om-texten: "mats w nilsson" → "mawini studio" i första raden, "driven by" omformulerad ("a passion for …")
 - Halva luften runt introt: 16 px (var 32 px) mellan första linjen och "creator of things" och mellan kontaktikonerna och nästa linje
 - Kontaktsektion mellan om-texten och sidfoten: rubriken "contact" (Regular, som design och photography; gemensam klass `.section-heading`) och e-post, telefon, @mawini.studio och LinkedIn som länkar. " / contact" sist i menyraden. Uppgifterna hämtas från samma `contact:` i texter.md som ikonerna
+
+**2026-10-23**
+- Kontaktsektionen kompakt som introt: 16 px till linjerna, 6 px mellan "contact" och e-postadressen. Återanvändbar klass `.section-compact` (introt och kontakt)
+- Kontaktlänkarna utan understrykning, orange vid hover (`.plain-links`, även menyraden)
+- "creator of things" i Regular i stället för fetstil

@@ -22,9 +22,9 @@ const footer = inline(texter.footer).replace(
 
     <hr />
 
-    <section class="intro">
+    <section class="intro section-compact">
       <p class="tagline" set:html={inline(texter.tagline)} />
-      <p class="categories" set:html={inline(texter.categories)} />
+      <p class="categories plain-links" set:html={inline(texter.categories)} />
       <ContactIcons contact={texter.contact} />
     </section>
 
@@ -40,9 +40,9 @@ const footer = inline(texter.footer).replace(
 
     <hr />
 
-    <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+    <section class="contact-section section-compact" id="contact" aria-labelledby="contact-heading">
       <h2 class="section-heading" id="contact-heading" set:html={inline(texter.contact.heading)} />
-      <ul class="contact-list">
+      <ul class="contact-list plain-links">
         {
           contactLinks(texter.contact).map(({ href, text, external }) => (
             <li>
@@ -115,29 +115,6 @@ const footer = inline(texter.footer).replace(
 
   .tagline {
     margin: 0;
-    font-weight: 600;
-  }
-
-  /* Halva luften (16 px) mellan linjerna och introt: under första linjen
-     och ovanför linjen efter kontaktikonerna. Luften mellan loggan och
-     första linjen är kvar på 32 px. */
-  hr:has(+ .intro) {
-    margin-bottom: 1rem;
-  }
-
-  .intro + hr {
-    margin-top: 1rem;
-  }
-
-  /* Länkarna i kategoriraden ser ut som texten och blir orange vid hover/fokus */
-  .categories :global(a) {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .categories :global(a:hover),
-  .categories :global(a:focus-visible) {
-    color: var(--accent);
   }
 
   .categories {
