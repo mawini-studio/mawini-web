@@ -9,32 +9,55 @@ const gallery = (await getCollection('galleri'))
   .map((entry) => entry.data)
   .sort((a, b) => a.order - b.order);
 
+// Astros file-loader loggar bara ett fel om YAML-filen inte går att läsa,
+// och bygget skulle då publicera ett tomt galleri. Stoppa bygget i stället.
+if (gallery.length === 0) {
+  throw new Error(
+    'galleri.yaml: inga bilder hittades. Kontrollera att filen är giltig YAML (indrag, kolon, citattecken).',
+  );
+}
+
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/gallery/*/*.{jpg,jpeg,png,webp}',
   { eager: true },
 );
 
-// Justified grid: varje bild får flex-grow och flex-basis i proportion till
-// sitt bildformat, så alla bilder på en rad får samma höjd.
-const items = await Promise.all(
-  gallery.map(async (item) => {
-    const path = `../assets/gallery/${item.category}/${item.file}`;
-    if (!images[path]) {
-      throw new Error(`galleri.yaml: hittar inte src/assets/gallery/${item.category}/${item.file}`);
+type GalleryImage = Extract<(typeof gallery)[number], { kind: 'image' }>;
+
+async function prepare(item: Omit<GalleryImage, 'kind' | 'order'>) {
+  const path = `../assets/gallery/${item.category}/${item.file}`;
+  if (!images[path]) {
+    throw new Error(`galleri.yaml: hittar inte src/assets/gallery/${item.category}/${item.file}`);
+  }
+  const src = images[path].default;
+  const full = await getImage({ src, width: Math.min(src.width, 2000), format: 'webp' });
+  const caption = [item.title, item.client, item.year].filter(Boolean).join(' · ');
+  return { item, src, full, caption, ratio: src.width / src.height };
+}
+
+// Justified grid: varje ruta får flex-grow och flex-basis i proportion till
+// sitt bildformat, så alla rutor på en rad får samma höjd.
+// Ett bildpar är en kolumn med två bilder ovanpå varandra. Med radhöjden h
+// och mellanrummet g blir kolumnens bredd k·(h − g), där k = 1 / (1/a₁ + 1/a₂),
+// så att paret inklusive mellanrum blir exakt h högt utan beskärning.
+const tiles = await Promise.all(
+  gallery.map(async (entry) => {
+    if (entry.kind === 'pair') {
+      const images = await Promise.all(entry.pair.map(prepare));
+      const k = 1 / images.reduce((sum, img) => sum + 1 / img.ratio, 0);
+      return { kind: 'pair' as const, images, k, photo: images[0].item.category === 'photography' };
     }
-    const src = images[path].default;
-    const full = await getImage({ src, width: Math.min(src.width, 2000), format: 'webp' });
-    const caption = [item.title, item.client, item.year].filter(Boolean).join(' · ');
-    return { item, src, full, caption, ratio: src.width / src.height };
+    const image = await prepare(entry);
+    return { kind: 'image' as const, images: [image], k: image.ratio, photo: image.item.category === 'photography' };
   }),
 );
 
 // Två sektioner: först allt som inte är foto, sedan foton.
 // Ordningen inom varje sektion följer galleri.yaml.
 const sections = [
-  { heading: texter.gallery.design, items: items.filter(({ item }) => item.category !== 'photography') },
-  { heading: texter.gallery.photography, items: items.filter(({ item }) => item.category === 'photography') },
-].filter((section) => section.items.length > 0);
+  { heading: texter.gallery.design, tiles: tiles.filter((tile) => !tile.photo) },
+  { heading: texter.gallery.photography, tiles: tiles.filter((tile) => tile.photo) },
+].filter((section) => section.tiles.length > 0);
 ---
 
 <div class="gallery">
@@ -43,22 +66,28 @@ const sections = [
       <section aria-labelledby={`gallery-heading-${s}`}>
         <h2 class="gallery-heading" id={`gallery-heading-${s}`} set:html={inline(section.heading)} />
         <ul class="grid">
-          {section.items.map(({ item, src, full, caption, ratio }, i) => (
-            <li style={`--ar: ${ratio.toFixed(4)}`}>
-              <a
-                href={full.src}
-                data-full={full.src}
-                data-caption={caption || undefined}
-                data-category={item.category}
-              >
-                <Image
-                  src={src}
-                  alt={item.alt}
-                  widths={[400, 700, 1000, 1400]}
-                  sizes="(max-width: 640px) 60vw, 360px"
-                  loading={s === 0 && i < 6 ? 'eager' : 'lazy'}
-                />
-              </a>
+          {section.tiles.map((tile, i) => (
+            <li
+              class={tile.kind === 'pair' ? 'pair' : undefined}
+              style={tile.kind === 'pair' ? `--k: ${tile.k.toFixed(4)}` : `--ar: ${tile.k.toFixed(4)}`}
+            >
+              {tile.images.map(({ item, src, full, caption, ratio }) => (
+                <a
+                  href={full.src}
+                  style={tile.kind === 'pair' ? `--ar: ${ratio.toFixed(4)}` : undefined}
+                  data-full={full.src}
+                  data-caption={caption || undefined}
+                  data-category={item.category}
+                >
+                  <Image
+                    src={src}
+                    alt={item.alt}
+                    widths={[400, 700, 1000, 1400]}
+                    sizes="(max-width: 640px) 60vw, 360px"
+                    loading={s === 0 && i < 6 ? 'eager' : 'lazy'}
+                  />
+                </a>
+              ))}
             </li>
           ))}
         </ul>
@@ -115,6 +144,14 @@ const sections = [
     flex: var(--ar) 1 calc(var(--ar) * var(--h, var(--row-h)));
     min-width: 0;
     margin-bottom: var(--gap);
+  }
+
+  /* Bildpar: kolumnbredd k·(h − g) ger total höjd h inklusive mellanrummet */
+  .grid li.pair {
+    flex: var(--k) 1 calc(var(--k) * (var(--h, var(--row-h)) - var(--gap)));
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
   }
 
   /* Radbrytning som sätts av skriptet nedan */
@@ -283,7 +320,12 @@ const sections = [
     const width = grid.clientWidth;
     const target = parseFloat(style.getPropertyValue('--row-h'));
     const gap = parseFloat(style.columnGap) || 0;
-    const ratios = tiles.map((li) => parseFloat(li.style.getPropertyValue('--ar')));
+    // Ruta i bredd vid radhöjd h: ratio·h − offset. Enstaka bild: offset 0.
+    // Bildpar: ratio k och offset k·g (mellanrummet mellan de två bilderna).
+    const ratios = tiles.map((li) =>
+      parseFloat(li.style.getPropertyValue(li.classList.contains('pair') ? '--k' : '--ar')),
+    );
+    const offsets = tiles.map((li, i) => (li.classList.contains('pair') ? ratios[i] * gap : 0));
 
     function setRow(from: number, to: number, height: number) {
       // Avrunda nedåt så att avrundningsfel aldrig skickar sista bilden till nästa rad
@@ -291,17 +333,19 @@ const sections = [
       for (let k = from; k <= to; k++) tiles[k].style.setProperty('--h', h);
     }
 
-    const heightOf = (sum: number, n: number) => (width - gap * (n - 1)) / sum;
+    const heightOf = (sum: number, off: number, n: number) => (width - gap * (n - 1) + off) / sum;
     let start = 0;
     let sum = 0;
+    let off = 0;
     for (let i = 0; i < tiles.length; i++) {
       sum += ratios[i];
+      off += offsets[i];
       const n = i - start + 1;
-      if (sum * target + gap * (n - 1) < width) continue;
+      if (sum * target - off + gap * (n - 1) < width) continue;
       let end = i;
-      let height = heightOf(sum, n);
+      let height = heightOf(sum, off, n);
       if (n > 1) {
-        const withoutLast = heightOf(sum - ratios[i], n - 1);
+        const withoutLast = heightOf(sum - ratios[i], off - offsets[i], n - 1);
         if (Math.abs(withoutLast - target) < Math.abs(height - target)) {
           end = i - 1;
           height = withoutLast;
@@ -314,6 +358,7 @@ const sections = [
       tiles[end].after(br);
       start = end + 1;
       sum = end === i ? 0 : ratios[i];
+      off = end === i ? 0 : offsets[i];
     }
   }
 

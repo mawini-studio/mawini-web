@@ -1,4 +1,4 @@
-# Galleriet på mawini.com – en post per bild.
+# Galleriet på mawini.com – en post per bild eller bildpar.
 # Ordningen här = ordningen i galleriet (flytta poster för att ändra).
 #
 # file      filnamn i src/assets/gallery/<category>/
@@ -14,6 +14,19 @@
 #   title: Beaujolais Nouveau 2025
 #   client: Exempelkund
 #   year: 2025
+#
+# Bildpar – två bilder staplade i samma kolumn, t.ex. två liggande foton.
+# Parets höjd inklusive mellanrum blir exakt radhöjden, bilderna beskärs
+# inte och kolumnens bredd räknas fram ur proportionerna. Båda bilderna
+# måste hamna i samma sektion (båda photography, eller båda icke-foton).
+# I lightboxen öppnas de var för sig, den översta först.
+# - pair:
+#     - file: dsc2558.jpg
+#       category: photography
+#       alt: Black and white gravestone plaque …
+#     - file: l1032298.jpg
+#       category: photography
+#       alt: Vintage Le Moulin Rouge hotel sign …
 
 - file: beaujolais-nouveaul-logotype-wbkg-a.jpg
   category: graphic-design
@@ -91,10 +104,10 @@
   category: photography
   alt: "Window in a weathered concrete wall reflecting clouds"
 
-- file: dsc2558.jpg
-  category: photography
-  alt: "Black and white gravestone plaque, Anna Busch 1855–1912"
-
-- file: l1032298.jpg
-  category: photography
-  alt: "Vintage Le Moulin Rouge hotel sign in front of a roadside motel"
+- pair:
+    - file: dsc2558.jpg
+      category: photography
+      alt: "Black and white gravestone plaque, Anna Busch 1855–1912"
+    - file: l1032298.jpg
+      category: photography
+      alt: "Vintage Le Moulin Rouge hotel sign in front of a roadside motel"

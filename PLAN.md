@@ -45,9 +45,10 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
+- **Bildpar**: en post med `pair:` och exakt två bilder (samma fält som ovan) staplas i samma kolumn. Parets höjd inklusive mellanrum = radhöjden, ingen beskärning; kolumnbredden räknas fram ur proportionerna: bredd = k·(h − g), där k = 1 / (1/a₁ + 1/a₂), h = radhöjd, g = mellanrum. Båda bilderna måste ligga i samma sektion. I lightboxen öppnas de var för sig, den översta först
 - Galleriet har två sektioner, var och en med eget justified grid: först **design** (allt som inte är foto: graphic-design, illustration, other), sedan **photography**. Rubrikerna har normal vikt (Regular) och samma storlek som brödtexten, och texten står i `src/content/texter.md` (`gallery.design`, `gallery.photography`)
 - Ordningen inom varje sektion = ordningen i galleri.yaml. Läses via content collection (`src/content.config.ts`), som validerar fälten
-- Bildfilerna ligger i `src/assets/gallery/<category>/`. Ett felstavat filnamn stoppar bygget med ett tydligt fel
+- Bildfilerna ligger i `src/assets/gallery/<category>/`. Bygget stoppar med ett tydligt fel vid: ogiltig YAML (med radnummer), felstavat filnamn, fel kategori, saknad alt, par med fler eller färre än två bilder, par över två sektioner, samma bild två gånger. Galleriet läses av en egen loader i `src/content.config.ts`, eftersom Astros `file()`-loader bara loggar YAML-fel och bygger vidare med tomt eller gammalt galleri
 - Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger. Lightboxen bläddrar genom alla bilder i en följd (design → photography → tillbaka till början)
 - **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
 - Alt-text på alla bilder (fältet `alt`)
@@ -100,6 +101,19 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
    ```
 3. Spara – bilden syns direkt på dev-servern. Fel kategori, saknad alt eller fel filnamn stoppar bygget med ett tydligt felmeddelande.
 
+**Lägga två bilder i samma kolumn (bildpar)**
+Passar t.ex. två liggande foton. Gör om två poster till en post med `pair:` (den översta bilden först). Indraget är viktigt: bildernas fält har fyra mellanslag mer än `- pair:`.
+```yaml
+- pair:
+    - file: dsc2558.jpg
+      category: photography
+      alt: Kort beskrivning av den övre bilden
+    - file: l1032298.jpg
+      category: photography
+      alt: Kort beskrivning av den nedre bilden
+```
+Båda bilderna måste vara foton, eller båda icke-foton. För att ta bort paret: gör om det till två vanliga poster igen.
+
 **Dev-server**
 - Starta: `npm run dev -- --host` (nås från mobilen på samma wifi via adressen under "Network")
 - Stoppa: `npx astro dev stop`, status: `npx astro dev status`
@@ -134,3 +148,8 @@ Uppdateras vid varje ändring av sajten.
 - All typografi ett steg mindre: text 13 → 12 px, ordmärke 15 → 14 px
 - Tätare bakgrundsränder: upprepas var 6:e px i stället för var 8:e
 - Lika mycket luft ovanför loggan som mellan loggan och linjen (32 px på alla skärmar)
+
+**2026-10-22**
+- Bildpar i galleriet (`pair:` i galleri.yaml): två bilder staplade i en kolumn, exakt radhöjd, ingen beskärning, öppnas var för sig i lightboxen
+- Testpar: de två liggande fotona `dsc2558.jpg` och `l1032298.jpg`
+- Strängare felkontroll: egen loader för galleri.yaml så att ogiltig YAML stoppar bygget i stället för att publicera tomt/gammalt galleri; dubbletter och felaktiga par ger tydliga fel
