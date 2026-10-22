@@ -104,10 +104,10 @@
   category: photography
   alt: "Window in a weathered concrete wall reflecting clouds"
 
-- pair:
-    - file: dsc2558.jpg
-      category: photography
-      alt: "Black and white gravestone plaque, Anna Busch 1855–1912"
-    - file: l1032298.jpg
-      category: photography
-      alt: "Vintage Le Moulin Rouge hotel sign in front of a roadside motel"
+- file: dsc2558.jpg
+  category: photography
+  alt: "Black and white gravestone plaque, Anna Busch 1855–1912"
+
+- file: l1032298.jpg
+  category: photography
+  alt: "Vintage Le Moulin Rouge hotel sign in front of a roadside motel"
