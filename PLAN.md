@@ -20,23 +20,25 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Accent | `#FF4600` |
 | Bakgrundsränder | `#DEDEDE`, diagonala (/), tilad 8×8 px SVG som data-URI i `body` i `src/styles/global.css`: en 1 px linje ritad som pixelsteg, `background-size: 8px 8px`. Ger jämna linjer utan moiré på 1x och 2x. Färgen står som `fill='%23dedede'` i SVG:n (kan inte vara CSS-variabel) |
 | Text | `#111` |
-| Ordmärke | IBM Plex Mono, glest spärrat, gemener |
+| Ordmärke | Logotypen `material/logo/mawini-studio-a.svg` (pixeltypsnitt, konturer som fyllda ytor, #FF4600). 313 px bred på desktop/surfplatta, 209 px på smala skärmar med 3x, 156,5 px på smala skärmar med 2x |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
-| Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
+| Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. CSS-variabler i `src/styles/global.css` |
 
 - Länkar: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
 - Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
-1. Header: "mawini studio" + rund logga (inline-SVG i `src/components/Logo.astro`, från `material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600). Favicon: `public/favicon.svg`
+1. Header: logotypen "mawini studio" (`src/components/Wordmark.astro`, läser `material/logo/mawini-studio-a.svg`) som länk till toppen (`#top`, aria-label "mawini studio" från `wordmark` i texter.md). Till höger en tom plats (`.header-slot`, 32×32 px) för en kommande hamburgermeny. Favicon: `public/favicon.svg` (den runda mwn-loggan)
+   - Skärpa: konturerna är tunna pixellinjer, så pathen avrundas vid bygget till pixelrutnätet för varje visningsstorlek (`src/lib/pixel-path.ts`). Varje storlek väljs så att linjen blir ett helt antal enhetspixlar: 313 px → 1 px (1x/2x/3x), 209 px → 2 enhetspx på 3x, 156,5 px → 1 enhetspx på 2x. Kontrollerat i skärmdumpar: inga kantutjämnade mellantoner, jämn linjebredd. Bara `shape-rendering="crispEdges"` räckte inte, Chrome kantutjämnade ändå
+   - Den tidigare headern (textordmärke + rund mwn-logga) finns kvar som git-taggen `header-ordmarke`
 2. Streckad linje
 3. Intro: "creator of things" (SemiBold), kategoriraden "design / photography / code / other / about", kontaktikoner. "design", "photography" och "about" är länkar till `#design`, `#photography` och `#about` (galleriets sektioner och om-texten): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
 4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
 5. Om-text
 6. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
-Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
+Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Wordmark, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
 
 ## Texter
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
@@ -118,6 +120,12 @@ Passar t.ex. två liggande foton. Gör om två poster till en post med `pair:` (
 ```
 Båda bilderna måste vara foton, eller båda icke-foton. För att ta bort paret: gör om det till två vanliga poster igen.
 
+**Testa en ändring på en gren (t.ex. nya loggan på `ny-logga`)**
+- Byt version: `git switch ny-logga` (nya) eller `git switch main` (live-versionen). Dev-servern visar den gren som är utcheckad
+- Gamla headern finns också som taggen `header-ordmarke`
+- Behålla ändringen: `git switch main && git merge ny-logga && git push` (publicerar)
+- Slänga den: `git switch main && git branch -D ny-logga`
+
 **Dev-server**
 - Starta: `npm run dev -- --host` (nås från mobilen på samma wifi via adressen under "Network")
 - Stoppa: `npx astro dev stop`, status: `npx astro dev status`
@@ -164,3 +172,8 @@ Uppdateras vid varje ändring av sajten.
 - Bakgrundsränderna ersatta med en tilad 8×8 px pixel-SVG i stället för repeating-linear-gradient, som gav moiré (45° med 6 px period = 8,49 px vågrätt). Kontrollerat pixel för pixel på 1x och 2x: 0 avvikande pixlar, jämn linjebredd, inga synliga skarvar
 - Kategoriraden fick " / about" sist; "design", "photography" och "about" länkar till respektive plats på sidan med mjuk scrollning (respekterar prefers-reduced-motion). Markdown-länkar fungerar nu i texter.md:s frontmatter-fält
 - Automatiskt årtal i sidfoten: `{year}` i texter.md blir innevarande år med romerska siffror; skrivs vid bygget och uppdateras i webbläsaren, byter vid midnatt på nyårsafton i besökarens tidszon. Testat: 2026–2099 m.fl. samt alla tal 1–3999, och årsskifte i Auckland/Stockholm med simulerad klocka
+
+**2026-10-22 (gren `ny-logga`)**
+- Git-taggen `header-ordmarke` på main före ändringen (gamla headern)
+- Ny header: logotypen `mawini-studio-a.svg` ersätter textordmärket, länkar till toppen; den runda mwn-loggan borttagen, platsen kvar för en hamburgermeny
+- Logotypens path avrundas till pixelrutnätet per storlek så att linjerna blir skarpa (0 kantutjämnade pixlar på desktop 1x/2x och mobil 2x/3x)

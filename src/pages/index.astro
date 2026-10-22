@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Logo from '../components/Logo.astro';
+import Wordmark from '../components/Wordmark.astro';
 import ContactIcons from '../components/ContactIcons.astro';
 import Gallery from '../components/Gallery.astro';
 import { texter, About, inline } from '../data/texter';
@@ -16,8 +16,11 @@ const footer = inline(texter.footer).replace(
 <Base title={texter.meta.title} description={texter.meta.description}>
   <main class="card">
     <header class="site-header">
-      <h1 class="wordmark" set:html={inline(texter.wordmark)} />
-      <Logo size={64} />
+      <h1 class="wordmark">
+        <Wordmark label={texter.wordmark} />
+      </h1>
+      <!-- Plats för en kommande hamburgermeny -->
+      <div class="header-slot" aria-hidden="true"></div>
     </header>
 
     <hr />
@@ -87,13 +90,17 @@ const footer = inline(texter.footer).replace(
     gap: 1rem;
   }
 
+  /* Logotypen (storlekar och skärpa: se src/components/Wordmark.astro) */
   .wordmark {
     margin: 0;
-    font-family: var(--mono);
-    font-weight: 400;
-    font-size: var(--wordmark-size);
-    letter-spacing: 0.35em;
-    text-transform: lowercase;
+    line-height: 0;
+  }
+
+  /* Tom plats till höger för en kommande hamburgermeny */
+  .header-slot {
+    flex: none;
+    width: 32px;
+    height: 32px;
   }
 
   .tagline {
