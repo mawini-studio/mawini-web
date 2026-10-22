@@ -119,8 +119,15 @@ const sections = [
 </dialog>
 
 <style>
+  /* 16 px mellan sista bildraden i design och rubriken photography
+     (bildraderna har redan mellanrummet --gap under sig) */
   section + section .gallery-heading {
-    margin-top: 2rem;
+    margin-top: calc(1rem - var(--gap));
+  }
+
+  /* Samma sak mot linjen under galleriet: dra av sista radens --gap */
+  .gallery {
+    margin-bottom: calc(-1 * var(--gap));
   }
 
   .grid {

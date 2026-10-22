@@ -26,18 +26,19 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 
 - Länkar i löptext: svarta, tunn orange understrykning (1 px, offset 3 px), orange vid hover/focus
 - Länkar i menyraden och kontaktlistan (`.plain-links`): ingen understrykning, samma färg som texten runt omkring, orange vid hover och tangentbordsfokus
-- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern. Luft 32 px på var sida (galleriet, om-texten)
-- **Kompakta textsektioner** (`.section-compact` i `global.css`: introt och kontakt, och nya korta textsektioner framöver): 16 px till linjen ovanför och under, och 6 px (halva) mellan rubrik och innehåll
+- Avdelare: streckade orange linjer (`<hr>`): under headern, före och efter galleriet, före footern. **16 px luft mellan varje sektion och linjerna** ovanför och under (introt, design, photography, om-texten, kontakt, sidfoten), också mellan design-bilderna och rubriken photography. Gäller alltid, även nya sektioner. Undantag: headern, 32 px ovanför loggan och 32 px mellan loggan och första linjen
+- Sektionsrubriker står 6 px från sitt innehåll
+- Teknik: `hr { margin: 1rem 0 }` i `global.css`; sektionerna får inte ha egen marginal mot linjerna (sista stycket i om-texten nollas, galleriet drar av sista bildradens `--gap`)
 - Sektionsrubriker (`.section-heading`: design, photography, contact) och "creator of things": brödtextens storlek, Regular
 - Kontaktikoner: grå i vila, orange vid hover
 
 ## Struktur
 1. Header: "mawini studio" + rund logga (inline-SVG i `src/components/Logo.astro`, från `material/logo/MWN_logotype_2025_A2.svg`, fill #FF4600). Favicon: `public/favicon.svg`
 2. Streckad linje
-3. Intro (`.section-compact`): "creator of things" (Regular), kategoriraden "design / photography / code / other / about / contact", kontaktikoner. "design", "photography", "about" och "contact" är länkar till `#design`, `#photography`, `#about` och `#contact` (galleriets sektioner, om-texten och kontaktsektionen): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
+3. Intro: "creator of things" (Regular), kategoriraden "design / photography / code / other / about / contact", kontaktikoner. "design", "photography", "about" och "contact" är länkar till `#design`, `#photography`, `#about` och `#contact` (galleriets sektioner, om-texten och kontaktsektionen): ser ut som texten, utan understrykning, orange (#FF4600) vid hover och tangentbordsfokus (plus sajtens vanliga orange fokusram). Mjuk scrollning (`scroll-behavior: smooth`, av vid `prefers-reduced-motion: reduce`) och `scroll-margin-top: 1.5rem` som luft ovanför målet
 4. Galleri: två sektioner, "design" och "photography", var och en med justified grid (lika radhöjd, bredd efter bildens proportioner, ca 5 per rad på desktop, 3 på mobil)
 5. Om-text
-6. Kontakt (`.section-compact`): rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn som länkar utan understrykning (`.plain-links`, orange vid hover). Streck ovanför och under
+6. Kontakt: rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn som länkar utan understrykning (`.plain-links`, orange vid hover). Streck ovanför och under
 7. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
 Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
@@ -180,3 +181,4 @@ Uppdateras vid varje ändring av sajten.
 - Kontaktsektionen kompakt som introt: 16 px till linjerna, 6 px mellan "contact" och e-postadressen. Återanvändbar klass `.section-compact` (introt och kontakt)
 - Kontaktlänkarna utan understrykning, orange vid hover (`.plain-links`, även menyraden)
 - "creator of things" i Regular i stället för fetstil
+- 16 px luft mellan alla sektioner och linjerna (var 32 px runt galleriet, om-texten och sidfoten, och 38 px mellan design och photography); 6 px mellan rubrik och bilder i design och photography. Headern oförändrad (32 px). Klassen `.section-compact` borttagen, eftersom 16 px nu är standard

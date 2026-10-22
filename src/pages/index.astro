@@ -22,7 +22,7 @@ const footer = inline(texter.footer).replace(
 
     <hr />
 
-    <section class="intro section-compact">
+    <section class="intro">
       <p class="tagline" set:html={inline(texter.tagline)} />
       <p class="categories plain-links" set:html={inline(texter.categories)} />
       <ContactIcons contact={texter.contact} />
@@ -40,7 +40,7 @@ const footer = inline(texter.footer).replace(
 
     <hr />
 
-    <section class="contact-section section-compact" id="contact" aria-labelledby="contact-heading">
+    <section class="contact-section" id="contact" aria-labelledby="contact-heading">
       <h2 class="section-heading" id="contact-heading" set:html={inline(texter.contact.heading)} />
       <ul class="contact-list plain-links">
         {
@@ -128,6 +128,17 @@ const footer = inline(texter.footer).replace(
 
   .about :global(p) {
     margin: 0 0 1rem;
+  }
+
+  /* Sista stycket: ingen egen marginal, så att luften ner till linjen blir 16 px */
+  .about :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Headern är undantaget: 32 px mellan loggan och första linjen
+     (samma som ovanför loggan) */
+  .site-header + hr {
+    margin-top: 2rem;
   }
 
   .contact-list {
