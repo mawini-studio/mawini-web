@@ -183,3 +183,4 @@ Uppdateras vid varje ändring av sajten.
 - "creator of things" i Regular i stället för fetstil
 - 16 px luft mellan alla sektioner och linjerna (var 32 px runt galleriet, om-texten och sidfoten, och 38 px mellan design och photography); 6 px mellan rubrik och bilder i design och photography. Headern oförändrad (32 px). Klassen `.section-compact` borttagen, eftersom 16 px nu är standard
 - Om-texten helt i Regular: fetstilen (`**…**`) på de inledande orden borttagen i texter.md
+- Ny sidtitel och beskrivning för Google/delning (meta i texter.md, med namnet Mats W Nilsson och design / photography / code); om-textens första rad nu bara "mawini studio"; "30+ years in the industry"

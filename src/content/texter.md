@@ -27,13 +27,13 @@ contact:
 
 # För Google och delning
 meta:
-  title: "mawini studio — graphic design / photography / illustration"
-  description: "Stockholm-based graphic designer and photographer. Brand identity, art direction, photography and illustration."
+  title: "mawini studio — Mats W Nilsson · design / photography / code"
+  description: "Mats W Nilsson, Stockholm-based designer, photographer and developer. Brand identity, art direction, photography, web, apps and games. 30+ years in the industry."
 ---
 
-mawini studio : artist in [ or out of ] residence
+mawini studio
 
-design + photography + code : 30+ years in the business. stockholm based. working independently as well as in collaboration with clients and agencies.
+design + photography + code : 30+ years in the industry. stockholm based. working independently as well as in collaboration with clients and agencies.
 
 competence : spans a wide range — graphic design, brand identity, art direction, photography, web design, app design, game design, coding (web, apps, games), motion graphics, illustration, copywriting — for clients ranging from ambitious startups to established global brands.
 
