@@ -25,10 +25,12 @@ contact:
   instagram: https://instagram.com/mawini.studio/
   linkedin: https://www.linkedin.com/in/mats-w-nilsson-a73b632/
 
-# För Google och delning
+# För Google och delning. Delningsbilden är public/og-image.png (1200×630,
+# kopia av material/mawini-delningsbild-a.png); imageAlt beskriver den.
 meta:
   title: "mawini studio — Mats W Nilsson · design / photography / code"
   description: "Mats W Nilsson, Stockholm-based designer, photographer and developer. Brand identity, art direction, photography, web, apps and games. 30+ years in the industry."
+  imageAlt: "mawini studio logotype in white pixel lettering on orange"
 ---
 
 mawini studio

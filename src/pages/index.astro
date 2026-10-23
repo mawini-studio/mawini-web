@@ -13,7 +13,7 @@ const footer = inline(texter.footer).replace(
 );
 ---
 
-<Base title={texter.meta.title} description={texter.meta.description}>
+<Base title={texter.meta.title} description={texter.meta.description} imageAlt={texter.meta.imageAlt}>
   <main class="card">
     <header class="site-header">
       <h1 class="wordmark" set:html={inline(texter.wordmark)} />

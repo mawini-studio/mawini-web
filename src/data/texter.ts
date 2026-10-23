@@ -21,6 +21,7 @@ export interface Texter {
   meta: {
     title: string;
     description: string;
+    imageAlt: string;
   };
 }
 

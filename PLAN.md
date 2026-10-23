@@ -46,6 +46,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 ## Texter
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
 - Frontmatter: ordmärke, intro, kategorier, footer, kontaktlänkar och meta (sidtitel, beskrivning)
+- Delning (Open Graph och Twitter-kort `summary_large_image`, i `src/layouts/Base.astro`): titel och beskrivning från `meta.title` och `meta.description`, delningsbild `public/og-image.png` (1200×630, absolut adress https://mawini.com/og-image.png) med alt-text från `meta.imageAlt`
 - Brödtexten är om-texten. `**fetstil**` fungerar både i brödtexten och i frontmatter-fälten
 - Sidfoten: `footer: "© {year} mawini"`. `{year}` skrivs med romerska siffror vid bygget och uppdateras av ett litet skript i webbläsaren vid sidladdning (besökarens år), som också byter vid midnatt på nyårsafton i besökarens tidszon om sidan står öppen. Funktionen finns i `src/lib/roman.ts` (heltal 1–3999)
 - Kontaktuppgifterna (`contact:` i frontmatter, med `heading` för sektionsrubriken) är enda källan för både ikonerna i introt och kontaktsektionen. Länkarna byggs av `contactLinks()` i `src/data/texter.ts`; Instagram-namnet (@…) hämtas ur adressen
@@ -124,6 +125,11 @@ Passar t.ex. två liggande foton. Gör om två poster till en post med `pair:` (
 ```
 Båda bilderna måste vara foton, eller båda icke-foton. För att ta bort paret: gör om det till två vanliga poster igen.
 
+**Byta delningsbild** (bilden som visas när länken delas)
+1. Gör en ny bild i 1200×630 px och spara den som `public/og-image.png` (originalet kan ligga i `material/`)
+2. Uppdatera `imageAlt` under `meta:` i `src/content/texter.md` så att den beskriver bilden
+3. Facebook, LinkedIn m.fl. cachar bilden; tvinga omläsning med deras felsökningsverktyg (t.ex. Facebook Sharing Debugger, LinkedIn Post Inspector)
+
 **Dev-server**
 - Starta: `npm run dev -- --host` (nås från mobilen på samma wifi via adressen under "Network")
 - Stoppa: `npx astro dev stop`, status: `npx astro dev status`
@@ -184,3 +190,4 @@ Uppdateras vid varje ändring av sajten.
 - 16 px luft mellan alla sektioner och linjerna (var 32 px runt galleriet, om-texten och sidfoten, och 38 px mellan design och photography); 6 px mellan rubrik och bilder i design och photography. Headern oförändrad (32 px). Klassen `.section-compact` borttagen, eftersom 16 px nu är standard
 - Om-texten helt i Regular: fetstilen (`**…**`) på de inledande orden borttagen i texter.md
 - Ny sidtitel och beskrivning för Google/delning (meta i texter.md, med namnet Mats W Nilsson och design / photography / code); om-textens första rad nu bara "mawini studio"; "30+ years in the industry"
+- Delningsbild: `public/og-image.png` (kopia av `material/mawini-delningsbild-a.png`, 1200×630) med Open Graph-taggar (og:image med absolut URL, bredd, höjd, alt) och Twitter-kort `summary_large_image`. Titel, beskrivning och bildens alt-text hämtas från `meta` i texter.md
