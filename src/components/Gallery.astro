@@ -97,7 +97,7 @@ const sections = [
   }
 </div>
 
-<dialog class="lightbox" aria-label="Image viewer">
+<dialog class="lightbox" aria-label="Image viewer" tabindex="-1">
   <!-- Tre paneler sida vid sida: föregående, aktuell och nästa post. Spåret
        flyttas med transform när man drar eller byter bild. -->
   <div class="lb-viewport">
@@ -219,6 +219,11 @@ const sections = [
     border: 0;
     background: var(--paper);
     overscroll-behavior: contain;
+  }
+
+  /* Dialogen själv kan få fokus (vid öppning med mus/touch) utan ram */
+  .lightbox:focus {
+    outline: none;
   }
 
   .lightbox::backdrop {
@@ -598,6 +603,11 @@ const sections = [
       link.addEventListener('click', (e) => {
         e.preventDefault();
         dialog.showModal();
+        // showModal flyttar fokus till stängknappen. Öppnas lightboxen med mus
+        // eller touch (detail > 0) fokuseras dialogen i stället, så att ingen
+        // fokusram syns; med tangentbordet (Enter, detail 0) står fokus kvar på
+        // stängknappen och ramen visas som vanligt (:focus-visible).
+        if (e.detail > 0) dialog.focus({ preventScroll: true });
         open(i);
       });
     });

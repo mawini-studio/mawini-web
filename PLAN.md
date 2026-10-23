@@ -66,6 +66,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
   - Pilknappar och tangentbord: 250 ms glidning, `cubic-bezier(0.22, 0.61, 0.36, 1)`, i samma riktning
   - Glidningen startar först när nästa posts bilder är laddade (oftast direkt, eftersom de är förladdade och avkodade i förväg)
   - `prefers-reduced-motion: reduce`: direkt byte med en snabb toning (120 ms), bilden följer inte fingret
+  - Fokus: öppnas lightboxen med mus eller touch fokuseras dialogen själv (ingen fokusram); med tangentbordet (Enter) hamnar fokus på stängknappen med ram (`:focus-visible`)
 - **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
 - Alt-text på alla bilder (fältet `alt`)
 - Kategorier: graphic-design, photography, illustration, other
@@ -197,3 +198,4 @@ Uppdateras vid varje ändring av sajten.
 - Ny sidtitel och beskrivning för Google/delning (meta i texter.md, med namnet Mats W Nilsson och design / photography / code); om-textens första rad nu bara "mawini studio"; "30+ years in the industry"
 - Delningsbild: `public/og-image.png` (kopia av `material/mawini-delningsbild-a.png`, 1200×630) med Open Graph-taggar (og:image med absolut URL, bredd, höjd, alt) och Twitter-kort `summary_large_image`. Titel, beskrivning och bildens alt-text hämtas från `meta` i texter.md
 - Mjukare bildbyte i lightboxen: bilden följer fingret på touch och grannposten glider in, byte efter 20 % eller snabb svep, annars tillbakafjädring; 250 ms glidning med pilar/tangentbord; bildpar flyttas som enhet; förladdat och föravkodat innan glidningen; prefers-reduced-motion ger direkt byte med toning
+- Lightboxen: ingen fokusram på stängknappen när den öppnas med mus eller touch, bara vid tangentbordsnavigering
