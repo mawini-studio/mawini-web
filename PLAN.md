@@ -60,7 +60,12 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 - Bildfilerna ligger i `src/assets/gallery/<category>/`. Bygget stoppar med ett tydligt fel vid: ogiltig YAML (med radnummer), felstavat filnamn, fel kategori, saknad alt, par med fler eller färre än två bilder, par över två sektioner, samma bild två gånger. Galleriet läses av en egen loader i `src/content.config.ts`, eftersom Astros `file()`-loader bara loggar YAML-fel och bygger vidare med tomt eller gammalt galleri
 - Klick öppnar **lightbox**: pilar, tangentbord, swipe, Esc stänger. Lightboxen bläddrar genom gridets poster i en följd (design → photography → tillbaka till början)
 - Ett **bildpar** är ett steg i lightboxen: de två bilderna visas staplade som i gridet, med samma mellanrum (`--gap`), på alla skärmstorlekar. Posten skalas så att allt ryms i fönstret: bredd = min(tillgänglig bredd, k·(tillgänglig höjd − g)); för en enstaka bild min(bredd, a·höjd). Tillgänglig yta = `.lb-stage` (marginal 3rem/4rem på desktop, 4rem upptill/nedtill på mobil för knapparna), minus ev. bildtext
-- Nästa och föregående post förladdas (för ett par: båda bilderna)
+- Nästa och föregående post förladdas (för ett par: båda bilderna), och posterna två steg bort också
+- **Bildbyte med glidning**: lightboxen är ett spår med tre paneler (föregående, aktuell, nästa) som flyttas med `transform: translateX`. Efter ett byte roteras panelerna, så att posten som gled in inte ritas om
+  - Touch: bilden följer fingret och grannposten glider in från sidan. Släpp efter 20 % av bredden, eller med en snabb svep (≥ 0,3 px/ms över de sista 100 ms), så glider den vidare; annars fjädrar den tillbaka (300 ms, liten överslängning). Lodräta gester ignoreras. Bildpar flyttas som en enhet
+  - Pilknappar och tangentbord: 250 ms glidning, `cubic-bezier(0.22, 0.61, 0.36, 1)`, i samma riktning
+  - Glidningen startar först när nästa posts bilder är laddade (oftast direkt, eftersom de är förladdade och avkodade i förväg)
+  - `prefers-reduced-motion: reduce`: direkt byte med en snabb toning (120 ms), bilden följer inte fingret
 - **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
 - Alt-text på alla bilder (fältet `alt`)
 - Kategorier: graphic-design, photography, illustration, other
@@ -191,3 +196,4 @@ Uppdateras vid varje ändring av sajten.
 - Om-texten helt i Regular: fetstilen (`**…**`) på de inledande orden borttagen i texter.md
 - Ny sidtitel och beskrivning för Google/delning (meta i texter.md, med namnet Mats W Nilsson och design / photography / code); om-textens första rad nu bara "mawini studio"; "30+ years in the industry"
 - Delningsbild: `public/og-image.png` (kopia av `material/mawini-delningsbild-a.png`, 1200×630) med Open Graph-taggar (og:image med absolut URL, bredd, höjd, alt) och Twitter-kort `summary_large_image`. Titel, beskrivning och bildens alt-text hämtas från `meta` i texter.md
+- Mjukare bildbyte i lightboxen: bilden följer fingret på touch och grannposten glider in, byte efter 20 % eller snabb svep, annars tillbakafjädring; 250 ms glidning med pilar/tangentbord; bildpar flyttas som enhet; förladdat och föravkodat innan glidningen; prefers-reduced-motion ger direkt byte med toning
