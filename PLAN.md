@@ -9,6 +9,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 ## Teknik
 - Mats Mac: Node v26, utvecklar i VS Code
 - **Astro** (statisk sajt), bilder via `astro:assets` (automatiska storlekar, WebP/AVIF, lazy loading)
+- Videoklipp komprimeras med **ffmpeg** (finns på Macen, `/usr/local/bin/ffmpeg`) via `npm run import-video`
 - Typsnitt via npm/Fontsource: `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` (självhostade)
 - Git + GitHub (publikt repo `mawini-studio/mawini-web`), deploy till **GitHub Pages** via GitHub Actions (Astros officiella workflow, `.github/workflows/deploy.yml`), körs vid varje push till `main`
 - Egen domän: `public/CNAME` innehåller `mawini.com`
@@ -54,6 +55,14 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
+- **Videoklipp** (mp4): en post med `video: <namn>.mp4` (i stället för `file:`), `category`, `alt` och valfria `title`, `client`, `year`. Klippet importeras först med `npm run import-video -- <original>` (`scripts/import-video.mjs`), som lägger tre filer i `src/assets/gallery/<kategori>/`:
+  - `<namn>.mp4`: gridversionen, H.264, utan ljud, max 1080 px hög, under 5 MB (CRF 23; annars två pass med räknad bitrate och tak, upp till tre försök)
+  - `<namn>.poster.jpg`: stillbild från första bildrutan
+  - `<namn>.audio.mp4`: bara om originalet har ljud; samma bild med AAC-ljud, för lightboxen
+  - I gridet: tyst autoplay i loop (`muted`, `playsinline`, `preload="none"`), bara när minst 25 % av klippet syns (IntersectionObserver), pausas utanför skärmen och när lightboxen är öppen. Stillbilden visas innan klippet laddats. Följer det justerade gridet utifrån stillbildens proportioner
+  - I lightboxen: ett steg som de andra (svep, pilar, tangentbord), stort med kontroller, ljud om originalet har ljud. Spelas när posten visas, pausas när man byter eller stänger. Drag som börjar på videons kontrollrad lämnas åt videon; pilarna byter post även när videon har fokus
+  - `prefers-reduced-motion`, eller om webbläsaren nekar autoplay (t.ex. iOS strömsparläge): ingen autoplay, stillbild med play-ikon
+  - Felkontroll som för bilder: saknad .mp4 eller stillbild, fel filändelse, saknad alt eller samma klipp två gånger stoppar bygget
 - **Bildpar**: en post med `pair:` och exakt två bilder (samma fält som ovan) staplas i samma kolumn. Parets höjd inklusive mellanrum = radhöjden, ingen beskärning; kolumnbredden räknas fram ur proportionerna: bredd = k·(h − g), där k = 1 / (1/a₁ + 1/a₂), h = radhöjd, g = mellanrum. Båda bilderna måste ligga i samma sektion. I lightboxen visas paret tillsammans som ett steg (se nedan)
 - Galleriet har två sektioner, var och en med eget justified grid: först **design** (allt som inte är foto: graphic-design, illustration, other), sedan **photography**. Rubrikerna har normal vikt (Regular) och samma storlek som brödtexten, och texten står i `src/content/texter.md` (`gallery.design`, `gallery.photography`)
 - Ordningen inom varje sektion = ordningen i galleri.yaml. Läses via content collection (`src/content.config.ts`), som validerar fälten
@@ -131,6 +140,17 @@ Passar t.ex. två liggande foton. Gör om två poster till en post med `pair:` (
 ```
 Båda bilderna måste vara foton, eller båda icke-foton. För att ta bort paret: gör om det till två vanliga poster igen.
 
+**Lägga till ett videoklipp**
+1. Lägg originalet i `material/gallery/<kategori>/` (mappen synkas inte till Git)
+2. Kör `npm run import-video -- material/gallery/<kategori>/klipp.mp4`. Skriptet komprimerar, gör en stillbild och skriver ut posten att klistra in
+3. Lägg in posten i `src/content/galleri.yaml` där klippet ska synas:
+   ```yaml
+   - video: klipp.mp4
+     category: graphic-design
+     alt: Kort beskrivning av klippet
+   ```
+4. Hamnar klippet över 5 MB varnar skriptet; korta klippet eller minska upplösningen
+
 **Byta delningsbild** (bilden som visas när länken delas)
 1. Gör en ny bild i 1200×630 px och spara den som `public/og-image.png` (originalet kan ligga i `material/`)
 2. Uppdatera `imageAlt` under `meta:` i `src/content/texter.md` så att den beskriver bilden
@@ -199,3 +219,7 @@ Uppdateras vid varje ändring av sajten.
 - Delningsbild: `public/og-image.png` (kopia av `material/mawini-delningsbild-a.png`, 1200×630) med Open Graph-taggar (og:image med absolut URL, bredd, höjd, alt) och Twitter-kort `summary_large_image`. Titel, beskrivning och bildens alt-text hämtas från `meta` i texter.md
 - Mjukare bildbyte i lightboxen: bilden följer fingret på touch och grannposten glider in, byte efter 20 % eller snabb svep, annars tillbakafjädring; 250 ms glidning med pilar/tangentbord; bildpar flyttas som enhet; förladdat och föravkodat innan glidningen; prefers-reduced-motion ger direkt byte med toning
 - Lightboxen: ingen fokusram på stängknappen när den öppnas med mus eller touch, bara vid tangentbordsnavigering
+
+**2026-10-26**
+- Stöd för videoklipp i galleriet: `video:` i galleri.yaml, importskript med ffmpeg (`npm run import-video`), tyst autoplay i gridet när klippet syns, uppspelning med kontroller i lightboxen, stillbild med play-ikon vid prefers-reduced-motion eller nekad autoplay. Testat i Chrome och WebKit (Safaris motor) på desktop och mobilbredd
+- Första klippet: `pippip-rundel-c.mp4` (Pip Pip-logotypanimation, 6,0 MB → 0,7 MB), efter Bellevue-paren

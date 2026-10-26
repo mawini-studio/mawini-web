@@ -20,6 +20,15 @@
 # inte och kolumnens bredd räknas fram ur proportionerna. Båda bilderna
 # måste hamna i samma sektion (båda photography, eller båda icke-foton).
 # I lightboxen visas paret tillsammans, staplat som i gridet, som ett steg.
+#
+# Videoklipp (mp4): importera först originalet, som komprimeras och får en
+# stillbild:  npm run import-video -- material/gallery/<kategori>/klipp.mp4
+# Lägg sedan till en post med video: i stället för file:. Klippet spelas tyst
+# i loop i gridet när det syns; i lightboxen med kontroller (och ljud om
+# originalet har ljud).
+# - video: klipp.mp4
+#   category: graphic-design
+#   alt: Kort beskrivning av klippet
 # - pair:
 #     - file: dsc2558.jpg
 #       category: photography
@@ -75,6 +84,10 @@
     - file: bellevuerouge2021b.jpg
       category: graphic-design
       alt: "Bellevue Rouge wine label artwork, manor house line drawing in red"
+
+- video: pippip-rundel-c.mp4
+  category: graphic-design
+  alt: "Pip Pip sparkling wine logo animation, Union Jack shapes turning inside a mint ring"
 
 - file: octopus-chartm-a.jpg
   category: graphic-design

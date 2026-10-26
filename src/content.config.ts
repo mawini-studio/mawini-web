@@ -36,8 +36,22 @@ const pair = z
     },
   );
 
+// Videoklipp: importeras med `npm run import-video`, som skapar <namn>.mp4,
+// <namn>.poster.jpg och ev. <namn>.audio.mp4 i src/assets/gallery/<kategori>/
+const video = z.object({
+  kind: z.literal('video'),
+  order: z.number(),
+  video: z.string().regex(/\.mp4$/, 'video: ska vara filnamnet på den importerade .mp4-filen'),
+  category: image.shape.category,
+  alt: image.shape.alt,
+  title: image.shape.title,
+  client: image.shape.client,
+  year: image.shape.year,
+});
+
 function idOf(item: Record<string, unknown>, order: number): string {
   if (typeof item.file === 'string') return item.file;
+  if (typeof item.video === 'string') return item.video;
   if (Array.isArray(item.pair)) {
     return `pair:${item.pair.map((p: { file?: unknown }) => String(p?.file)).join('+')}`;
   }
@@ -74,7 +88,7 @@ function galleriLoader(): Loader {
           if (seen.has(id)) throw new Error(`${FILE}: ${id} finns med två gånger`);
           seen.add(id);
           // kind styr vilken del av schemat som gäller, så att felmeddelandena blir tydliga
-          const kind = 'pair' in item ? 'pair' : 'image';
+          const kind = 'pair' in item ? 'pair' : 'video' in item ? 'video' : 'image';
           entries.push({ id, data: await parseData({ id, data: { ...item, kind, order }, filePath: path }) });
         }
         store.clear();
@@ -101,6 +115,7 @@ const galleri = defineCollection({
   schema: z.discriminatedUnion('kind', [
     image.extend({ kind: z.literal('image'), order: z.number() }),
     pair,
+    video,
   ]),
 });
 

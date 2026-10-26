@@ -22,7 +22,15 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
+// Videoklipp (från `npm run import-video`): gridversion, ev. version med ljud
+const videos = import.meta.glob<string>('../assets/gallery/*/*.mp4', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+});
+
 type GalleryImage = Extract<(typeof gallery)[number], { kind: 'image' }>;
+type GalleryVideo = Extract<(typeof gallery)[number], { kind: 'video' }>;
 
 async function prepare(item: Omit<GalleryImage, 'kind' | 'order'>) {
   const path = `../assets/gallery/${item.category}/${item.file}`;
@@ -32,7 +40,33 @@ async function prepare(item: Omit<GalleryImage, 'kind' | 'order'>) {
   const src = images[path].default;
   const full = await getImage({ src, width: Math.min(src.width, 2000), format: 'webp' });
   const caption = [item.title, item.client, item.year].filter(Boolean).join(' · ');
-  return { item, src, full, caption, ratio: src.width / src.height };
+  return { item, src, full, caption, ratio: src.width / src.height, video: undefined };
+}
+
+async function prepareVideo(entry: GalleryVideo) {
+  const dir = `../assets/gallery/${entry.category}`;
+  const name = entry.video.replace(/\.mp4$/, '');
+  const grid = videos[`${dir}/${name}.mp4`];
+  const poster = images[`${dir}/${name}.poster.jpg`]?.default;
+  if (!grid || !poster) {
+    throw new Error(
+      `galleri.yaml: hittar inte ${!grid ? `${name}.mp4` : `${name}.poster.jpg`} i src/assets/gallery/${entry.category}/. ` +
+        `Importera klippet med: npm run import-video -- <originalfil>`,
+    );
+  }
+  // Lightboxen visar versionen med ljud om originalet hade ljud
+  const lightbox = videos[`${dir}/${name}.audio.mp4`] ?? grid;
+  const gridPoster = await getImage({ src: poster, width: Math.min(poster.width, 800), format: 'webp' });
+  const full = await getImage({ src: poster, width: Math.min(poster.width, 2000), format: 'webp' });
+  const caption = [entry.title, entry.client, entry.year].filter(Boolean).join(' · ');
+  return {
+    item: entry,
+    src: poster,
+    full,
+    caption,
+    ratio: poster.width / poster.height,
+    video: { grid, lightbox, poster: gridPoster.src, hasAudio: lightbox !== grid },
+  };
 }
 
 // Justified grid: varje ruta får flex-grow och flex-basis i proportion till
@@ -46,6 +80,10 @@ const tiles = await Promise.all(
       const images = await Promise.all(entry.pair.map(prepare));
       const k = 1 / images.reduce((sum, img) => sum + 1 / img.ratio, 0);
       return { kind: 'pair' as const, images, k, photo: images[0].item.category === 'photography' };
+    }
+    if (entry.kind === 'video') {
+      const clip = await prepareVideo(entry);
+      return { kind: 'video' as const, images: [clip], k: clip.ratio, photo: clip.item.category === 'photography' };
     }
     const image = await prepare(entry);
     return { kind: 'image' as const, images: [image], k: image.ratio, photo: image.item.category === 'photography' };
@@ -71,24 +109,55 @@ const sections = [
               class={tile.kind === 'pair' ? 'pair' : undefined}
               style={tile.kind === 'pair' ? `--k: ${tile.k.toFixed(4)}` : `--ar: ${tile.k.toFixed(4)}`}
             >
-              {tile.images.map(({ item, src, full, caption, ratio }) => (
-                <a
-                  href={full.src}
-                  style={tile.kind === 'pair' ? `--ar: ${ratio.toFixed(4)}` : undefined}
-                  data-full={full.src}
-                  data-ar={ratio.toFixed(4)}
-                  data-caption={caption || undefined}
-                  data-category={item.category}
-                >
-                  <Image
-                    src={src}
-                    alt={item.alt}
-                    widths={[400, 700, 1000, 1400]}
-                    sizes="(max-width: 640px) 60vw, 360px"
-                    loading={s === 0 && i < 6 ? 'eager' : 'lazy'}
-                  />
-                </a>
-              ))}
+              {tile.images.map(({ item, src, full, caption, ratio, video }) =>
+                video ? (
+                  // Videoklipp: tyst loop som spelas bara när klippet syns
+                  // (se skriptet). Stillbilden visas innan det laddats.
+                  <a
+                    href={video.lightbox}
+                    class="video-link"
+                    aria-label={`${item.alt} (video)`}
+                    data-full={video.lightbox}
+                    data-kind="video"
+                    data-poster={full.src}
+                    data-audio={video.hasAudio ? '' : undefined}
+                    data-ar={ratio.toFixed(4)}
+                    data-caption={caption || undefined}
+                    data-category={item.category}
+                  >
+                    <video
+                      src={video.grid}
+                      poster={video.poster}
+                      width={src.width}
+                      height={src.height}
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      disablepictureinpicture
+                      aria-hidden="true"
+                      tabindex="-1"
+                    />
+                  </a>
+                ) : (
+                  <a
+                    href={full.src}
+                    style={tile.kind === 'pair' ? `--ar: ${ratio.toFixed(4)}` : undefined}
+                    data-full={full.src}
+                    data-ar={ratio.toFixed(4)}
+                    data-caption={caption || undefined}
+                    data-category={item.category}
+                  >
+                    <Image
+                      src={src}
+                      alt={item.alt}
+                      widths={[400, 700, 1000, 1400]}
+                      sizes="(max-width: 640px) 60vw, 360px"
+                      loading={s === 0 && i < 6 ? 'eager' : 'lazy'}
+                    />
+                  </a>
+                ),
+              )}
             </li>
           ))}
         </ul>
@@ -110,6 +179,7 @@ const sections = [
                 <div class="lb-stack">
                   <img alt="" draggable="false" />
                   <img alt="" draggable="false" hidden />
+                  <video class="lb-video" controls playsinline preload="none" hidden />
                 </div>
                 <figcaption hidden />
               </figure>
@@ -192,8 +262,41 @@ const sections = [
   }
 
   .grid a:hover img,
-  .grid a:focus-visible img {
+  .grid a:focus-visible img,
+  .grid a:hover video,
+  .grid a:focus-visible video {
     opacity: 0.85;
+  }
+
+  /* Videoklipp i gridet: fyller rutan som en bild */
+  .grid video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--ar);
+    object-fit: cover;
+    transition: opacity 0.2s;
+  }
+
+  .video-link {
+    position: relative;
+  }
+
+  /* Play-ikon när klippet inte spelar av sig självt: prefers-reduced-motion,
+     eller om webbläsaren stoppar autoplay (t.ex. iOS strömsparläge) */
+  .video-link.is-still::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 44px;
+    height: 44px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M9 7v10l8-5z'/%3E%3C/svg%3E")
+      center / 24px no-repeat,
+      rgba(17, 17, 17, 0.55);
+    pointer-events: none;
   }
 
   @media (max-width: 900px) {
@@ -310,6 +413,17 @@ const sections = [
     height: auto;
     user-select: none;
     -webkit-user-drag: none;
+  }
+
+  .lb-stack video {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #f2f2f2;
+  }
+
+  .lb-stack video[hidden] {
+    display: none;
   }
 
   figcaption {
@@ -449,12 +563,57 @@ const sections = [
     }).observe(grid);
   });
 
+  // Videoklipp i gridet: tyst loop som spelas bara när klippet syns och
+  // pausas utanför skärmen. Med prefers-reduced-motion, eller om webbläsaren
+  // nekar autoplay (t.ex. iOS strömsparläge), visas stillbilden med play-ikon.
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const gridVideos = [...document.querySelectorAll<HTMLVideoElement>('.grid video')];
+  const visibleVideos = new Set<HTMLVideoElement>();
+  let gridPaused = false; // när lightboxen är öppen
+
+  function updateGridVideo(video: HTMLVideoElement) {
+    const link = video.closest('a')!;
+    const shouldPlay = visibleVideos.has(video) && !reducedMotion.matches && !gridPaused;
+    if (!shouldPlay) {
+      video.pause();
+      link.classList.toggle('is-still', reducedMotion.matches);
+      return;
+    }
+    // muted måste sättas som egenskap också för att iOS ska tillåta autoplay
+    video.muted = true;
+    video.play().then(
+      () => link.classList.remove('is-still'),
+      () => link.classList.add('is-still'),
+    );
+  }
+
+  const videoObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) visibleVideos.add(video);
+        else visibleVideos.delete(video);
+        updateGridVideo(video);
+      }
+    },
+    { threshold: 0.25 },
+  );
+  gridVideos.forEach((video) => {
+    video.closest('a')!.classList.toggle('is-still', reducedMotion.matches);
+    videoObserver.observe(video);
+  });
+  reducedMotion.addEventListener('change', () => gridVideos.forEach(updateGridVideo));
+
+  function pauseGridVideos(paused: boolean) {
+    gridPaused = paused;
+    gridVideos.forEach(updateGridVideo);
+  }
+
   // Lightboxen bläddrar genom gridets poster i sidans ordning, över sektionerna.
   // Ett bildpar är en post och visas staplat precis som i gridet.
   const dialog = document.querySelector<HTMLDialogElement>('.lightbox')!;
   const viewport = dialog.querySelector<HTMLElement>('.lb-viewport')!;
   const track = dialog.querySelector<HTMLElement>('.lb-track')!;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   interface Step {
     links: HTMLAnchorElement[];
@@ -473,8 +632,9 @@ const sections = [
   let current = 0;
   let busy = false;
 
+  // Förladda bilderna, eller stillbilden för ett videoklipp
   function preload(i: number) {
-    steps[wrap(i)].links.forEach((a) => (new Image().src = a.dataset.full!));
+    steps[wrap(i)].links.forEach((a) => (new Image().src = (a.dataset.kind === 'video' ? a.dataset.poster : a.dataset.full)!));
   }
 
   // Skala posten så att den ryms helt i .lb-stage. Med bredden W blir höjden
@@ -499,8 +659,29 @@ const sections = [
     const step = wrap(i);
     panel.dataset.step = String(step);
     const { links, ratios } = steps[step];
+    const isVideo = links[0].dataset.kind === 'video';
+
+    // Videoklipp: en <video> med kontroller i stället för bilderna
+    const video = panel.querySelector<HTMLVideoElement>('video.lb-video')!;
+    video.hidden = !isVideo;
+    if (isVideo) {
+      const link = links[0];
+      if (video.getAttribute('src') !== link.dataset.full) {
+        video.pause();
+        video.poster = link.dataset.poster!;
+        video.src = link.dataset.full!;
+      }
+      video.muted = !link.hasAttribute('data-audio');
+      video.style.aspectRatio = String(ratios[0]);
+      video.setAttribute('aria-label', link.getAttribute('aria-label') ?? '');
+    } else if (video.hasAttribute('src')) {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    }
+
     panel.querySelectorAll<HTMLImageElement>('.lb-stack img').forEach((img, k) => {
-      const link = links[k];
+      const link = isVideo ? undefined : links[k];
       img.hidden = !link;
       if (!link) {
         img.removeAttribute('src');
@@ -510,7 +691,7 @@ const sections = [
         img.src = link.dataset.full!;
         img.decode().catch(() => {}); // avkoda i förväg, så att glidningen inte hackar
       }
-      img.alt = link.querySelector('img')!.alt;
+      img.alt = link.querySelector('img')?.alt ?? '';
       img.style.aspectRatio = String(ratios[k]);
     });
     const caption = panel.querySelector('figcaption')!;
@@ -534,10 +715,27 @@ const sections = [
     track.style.transform = 'translateX(0px)';
   }
 
+  // Spela klippet i den aktuella panelen (inte med prefers-reduced-motion),
+  // pausa övriga; grannarna laddar bara metadata och stillbild
+  function updateLightboxVideos() {
+    panels.forEach((panel, k) => {
+      const video = panel.querySelector<HTMLVideoElement>('video.lb-video')!;
+      if (video.hidden) return;
+      if (k === 1 && dialog.open) {
+        video.preload = 'auto';
+        if (!reducedMotion.matches) video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.preload = 'metadata';
+      }
+    });
+  }
+
   function open(i: number) {
     current = wrap(i);
     panels.forEach((panel, k) => render(panel, current + k - 1));
     place();
+    updateLightboxVideos();
     preload(current + 2);
     preload(current - 2);
   }
@@ -549,6 +747,7 @@ const sections = [
     panels = dir === 1 ? [panels[1], panels[2], panels[0]] : [panels[2], panels[0], panels[1]];
     render(dir === 1 ? panels[2] : panels[0], current + dir);
     place();
+    updateLightboxVideos();
     preload(current + 2 * dir);
   }
 
@@ -602,6 +801,7 @@ const sections = [
     step.links.forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
+        pauseGridVideos(true);
         dialog.showModal();
         // showModal flyttar fokus till stängknappen. Öppnas lightboxen med mus
         // eller touch (detail > 0) fokuseras dialogen i stället, så att ingen
@@ -626,19 +826,23 @@ const sections = [
   dialog.addEventListener('click', (e) => {
     if (suppressClick) return;
     const target = e.target as Element;
-    if (!target.closest('img, button, figcaption')) dialog.close();
+    if (!target.closest('img, video, button, figcaption')) dialog.close();
   });
 
   // Esc hanteras av <dialog>; pilar här
+  // (även när ett videoklipp har fokus: pilarna byter post i stället för att spola)
   dialog.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') go(-1);
-    if (e.key === 'ArrowRight') go(1);
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.target instanceof HTMLVideoElement) e.preventDefault();
+    go(e.key === 'ArrowLeft' ? -1 : 1);
   });
 
   // Återställ fokus till posten i gridet när lightboxen stängs
   dialog.addEventListener('close', () => {
     busy = false;
     place();
+    panels.forEach((panel) => panel.querySelector('video')!.pause());
+    pauseGridVideos(false);
     const link = steps[current].links[0];
     link.focus({ preventScroll: true });
     link.scrollIntoView({ block: 'nearest' });
@@ -653,6 +857,8 @@ const sections = [
 
   viewport.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' || busy || drag) return;
+    // Drag som börjar på videons kontrollrad (spolning m.m.) lämnas åt videon
+    if (e.target instanceof HTMLVideoElement && e.clientY > e.target.getBoundingClientRect().bottom - 56) return;
     drag = { id: e.pointerId, x: e.clientX, y: e.clientY, active: false, samples: [{ x: e.clientX, t: e.timeStamp }] };
   });
 
