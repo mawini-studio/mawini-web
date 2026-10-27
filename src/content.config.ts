@@ -49,6 +49,8 @@ const video = z.object({
   title: image.shape.title,
   client: image.shape.client,
   year: image.shape.year,
+  // Tidpunkt i sekunder som stillbilden tas från (annars första bildrutan)
+  poster: z.number().min(0, 'poster: ska vara en tidpunkt i sekunder, t.ex. 2.0').optional(),
 });
 
 function idOf(item: Record<string, unknown>, order: number): string {

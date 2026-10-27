@@ -3,6 +3,7 @@
 //
 //   npm run import-video -- material/gallery/graphic-design/klipp.mp4
 //   npm run import-video -- ~/Desktop/klipp.mov --category photography
+//   npm run import-video -- klipp.mp4 --poster 2.0 --poster-only
 //
 // Kategorin tas från mappen klippet ligger i (material/gallery/<kategori>/)
 // om den inte anges med --category. Resultatet hamnar i
@@ -12,16 +13,24 @@
 //                      mål under 5 MB (andra pass med räknad bitrate vid behov)
 //   <namn>.audio.mp4   bara om originalet har ljud: samma bild + AAC-ljud,
 //                      används i lightboxen
-//   <namn>.poster.jpg  stillbild från första bildrutan
+//   <namn>.poster.jpg  stillbild, från första bildrutan eller från tidpunkten
+//                      i fältet poster: i galleri.yaml (eller --poster <sekunder>)
+//   <namn>.poster.json bara när tidpunkten inte är 0: { "time": 2 }. Bygget
+//                      jämför den med poster: i galleri.yaml och stoppar om
+//                      stillbilden inte är tagen vid rätt tidpunkt
+//
+// --poster-only gör bara om stillbilden (ingen omkodning av klippet).
 //
 // Lägg sedan till posten i src/content/galleri.yaml:
 //   - video: <namn>.mp4
 //     category: <kategori>
 //     alt: Kort beskrivning av klippet
+//     poster: 2.0   (valfritt)
 import { execFileSync, spawnSync } from 'node:child_process';
-import { statSync, mkdirSync, rmSync } from 'node:fs';
+import { statSync, mkdirSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
+import { parse } from 'yaml';
 
 const CATEGORIES = ['graphic-design', 'photography', 'illustration', 'other'];
 const MAX_HEIGHT = 1080;
@@ -29,10 +38,13 @@ const MAX_BYTES = 5 * 1024 * 1024;
 const MB = (n) => (n / 1024 / 1024).toFixed(2) + ' MB';
 
 const args = process.argv.slice(2);
-const source = args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--category');
+const valueFlags = ['--category', '--poster'];
+const source = args.find((a, i) => !a.startsWith('--') && !valueFlags.includes(args[i - 1]));
 const catIndex = args.indexOf('--category');
+const posterIndex = args.indexOf('--poster');
+const posterOnly = args.includes('--poster-only');
 if (!source) {
-  console.error('Användning: npm run import-video -- <klipp.mp4> [--category graphic-design]');
+  console.error('Användning: npm run import-video -- <klipp.mp4> [--category graphic-design] [--poster <sekunder>] [--poster-only]');
   process.exit(1);
 }
 const input = resolve(source);
@@ -49,6 +61,22 @@ mkdirSync(outDir, { recursive: true });
 const gridOut = join(outDir, `${name}.mp4`);
 const audioOut = join(outDir, `${name}.audio.mp4`);
 const posterOut = join(outDir, `${name}.poster.jpg`);
+const posterInfo = join(outDir, `${name}.poster.json`);
+
+// Stillbildens tidpunkt: --poster, annars poster: i klippets post i galleri.yaml, annars 0
+function posterFromYaml() {
+  try {
+    const entries = parse(readFileSync('src/content/galleri.yaml', 'utf8'));
+    return entries?.find?.((e) => e?.video === `${name}.mp4`)?.poster;
+  } catch {
+    return undefined;
+  }
+}
+const posterTime = Number(posterIndex >= 0 ? args[posterIndex + 1] : (posterFromYaml() ?? 0));
+if (!Number.isFinite(posterTime) || posterTime < 0) {
+  console.error(`Ogiltig tidpunkt för stillbilden: ${args[posterIndex + 1]}`);
+  process.exit(1);
+}
 
 // Läs längd, storlek och om det finns ljud ur ffmpegs egen utskrift
 // (ffprobe behövs inte)
@@ -63,6 +91,10 @@ if (!duration || !size) {
   console.error(`Kunde inte läsa ${input} som video:\n${probe}`);
   process.exit(1);
 }
+if (posterTime >= duration) {
+  console.error(`poster: ${posterTime} s ligger efter klippets slut (${duration.toFixed(2)} s)`);
+  process.exit(1);
+}
 console.log(`${basename(input)}: ${size[1]}×${size[2]}, ${duration.toFixed(1)} s, ${hasAudio ? 'med ljud' : 'utan ljud'}`);
 
 // Skala ner till max 1080 px höjd (aldrig upp), jämna mått för H.264
@@ -71,6 +103,21 @@ const common = ['-c:v', 'libx264', '-profile:v', 'high', '-level', '4.1', '-pix_
 
 function ffmpeg(list) {
   execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...list], { stdio: 'inherit' });
+}
+
+// Stillbilden: första bildrutan vid eller efter tidpunkten, samma storlek som
+// videon. -ss före -i söker exakt när bilden avkodas om (inte bara till
+// närmaste nyckelbildruta).
+function writePoster() {
+  ffmpeg(['-ss', String(posterTime), '-i', input, '-vf', scale, '-frames:v', '1', '-q:v', '2', posterOut]);
+  if (posterTime > 0) writeFileSync(posterInfo, JSON.stringify({ time: posterTime }) + '\n');
+  else rmSync(posterInfo, { force: true });
+  console.log(`poster: ${posterOut} (${MB(statSync(posterOut).size)}, ${posterTime ? `${posterTime} s` : 'första bildrutan'})`);
+}
+
+if (posterOnly) {
+  writePoster();
+  process.exit(0);
 }
 
 // 1. Gridversionen utan ljud: först kvalitetsstyrt (CRF 23). Blir den för
@@ -106,8 +153,7 @@ if (hasAudio) {
   rmSync(audioOut, { force: true });
 }
 
-// 3. Stillbild från första bildrutan, samma storlek som videon
-ffmpeg(['-i', input, '-vf', scale, '-frames:v', '1', '-q:v', '2', posterOut]);
-console.log(`poster: ${posterOut} (${MB(statSync(posterOut).size)})`);
+// 3. Stillbild
+writePoster();
 
-console.log(`\nLägg till i src/content/galleri.yaml:\n- video: ${name}.mp4\n  category: ${category}\n  alt: Kort beskrivning av klippet`);
+console.log(`\nLägg till i src/content/galleri.yaml:\n- video: ${name}.mp4\n  category: ${category}\n  alt: Kort beskrivning av klippet${posterTime ? `\n  poster: ${posterTime}` : ''}`);

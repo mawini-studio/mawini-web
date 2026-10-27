@@ -29,6 +29,12 @@ const videos = import.meta.glob<string>('../assets/gallery/*/*.mp4', {
   eager: true,
 });
 
+// Stillbildens tidpunkt enligt importskriptet (<namn>.poster.json, bara när den inte är 0)
+const posterTimes = import.meta.glob<{ time: number }>('../assets/gallery/*/*.poster.json', {
+  import: 'default',
+  eager: true,
+});
+
 type GalleryImage = Extract<(typeof gallery)[number], { kind: 'image' }>;
 type GalleryVideo = Extract<(typeof gallery)[number], { kind: 'video' }>;
 
@@ -52,6 +58,15 @@ async function prepareVideo(entry: GalleryVideo) {
     throw new Error(
       `galleri.yaml: hittar inte ${!grid ? `${name}.mp4` : `${name}.poster.jpg`} i src/assets/gallery/${entry.category}/. ` +
         `Importera klippet med: npm run import-video -- <originalfil>`,
+    );
+  }
+  // Stillbilden måste vara tagen vid tidpunkten i poster: (annars första bildrutan)
+  const wanted = entry.poster ?? 0;
+  const taken = posterTimes[`${dir}/${name}.poster.json`]?.time ?? 0;
+  if (wanted !== taken) {
+    throw new Error(
+      `galleri.yaml: ${entry.video} har poster: ${wanted}, men stillbilden är tagen vid ${taken} s. ` +
+        `Gör om den med: npm run import-video -- <originalfil> --poster-only`,
     );
   }
   // Lightboxen visar versionen med ljud om originalet hade ljud

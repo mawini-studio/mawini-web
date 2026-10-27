@@ -30,9 +30,15 @@
 # Lägg sedan till en post med video: i stället för file:. Klippet spelas tyst
 # i loop i gridet när det syns; i lightboxen med kontroller (och ljud om
 # originalet har ljud).
+# poster: (valfritt) tidpunkt i sekunder som stillbilden tas från, i stället
+# för första bildrutan. Stillbilden visas i gridet innan klippet laddats, vid
+# reducerad rörelse och när autoplay nekas. Ändrar du poster: måste
+# stillbilden göras om (bygget stoppar annars):
+#   npm run import-video -- <originalfil> --poster-only
 # - video: klipp.mp4
 #   category: graphic-design
 #   alt: Kort beskrivning av klippet
+#   poster: 2.0
 # - pair:
 #     - file: dsc2558.jpg
 #       category: photography
@@ -94,6 +100,7 @@
 - video: pippip-rundel-c.mp4
   category: graphic-design
   alt: "Pip Pip sparkling wine logo animation, Union Jack shapes turning inside a mint ring"
+  poster: 2.0
 
 - file: pippip-label-80x94mm-a.jpg
   category: graphic-design
