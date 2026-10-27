@@ -147,6 +147,7 @@ const sections = [
                     data-ar={ratio.toFixed(4)}
                     data-caption={caption || undefined}
                     data-category={item.category}
+                    data-border={item.border ? '' : undefined}
                   >
                     <Image
                       src={src}
@@ -251,12 +252,7 @@ const sections = [
 
   .grid a {
     display: block;
-    background: var(--tile);
-  }
-
-  /* Variant B (global.css): bildens vita blir tonen bakom den */
-  :global(:root[data-bg='b']) .grid :is(img, video) {
-    mix-blend-mode: multiply;
+    background: #f2f2f2;
   }
 
   .grid img {
@@ -264,6 +260,15 @@ const sections = [
     height: auto;
     aspect-ratio: var(--ar);
     transition: opacity 0.2s;
+  }
+
+  /* border: true i galleri.yaml: 1 px linje ritad innanför bildens kant,
+     så att storleken och gridberäkningen inte påverkas. Outline ritas
+     ovanpå bilden och fästs mot hela skärmpixlar, så den blir skarp. */
+  .grid a[data-border] img,
+  .lb-stack img[data-border] {
+    outline: 1px solid var(--text);
+    outline-offset: -1px;
   }
 
   .grid a:hover img,
@@ -697,6 +702,7 @@ const sections = [
         img.decode().catch(() => {}); // avkoda i förväg, så att glidningen inte hackar
       }
       img.alt = link.querySelector('img')?.alt ?? '';
+      img.toggleAttribute('data-border', link.hasAttribute('data-border'));
       img.style.aspectRatio = String(ratios[k]);
     });
     const caption = panel.querySelector('figcaption')!;

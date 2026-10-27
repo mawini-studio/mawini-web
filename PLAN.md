@@ -21,7 +21,6 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Accent | `#FF4600` |
 | Bakgrundsränder | `#DEDEDE`, diagonala (/), tilad 8×8 px SVG som data-URI i `body` i `src/styles/global.css`: en 1 px linje ritad som pixelsteg, `background-size: 8px 8px`. Ger jämna linjer utan moiré på 1x och 2x. Färgen står som `fill='%23dedede'` i SVG:n (kan inte vara CSS-variabel) |
 | Text | `#111` |
-| Bakgrunder | `--page` (sidan bakom ränderna) `#fff`, `--paper` (kortet, lightboxen) `#fff`, `--tile` (bakom gridbilder medan de laddar) `#f2f2f2`, i `global.css` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
 | Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
@@ -55,7 +54,8 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 - Länkar i frontmatter-fälten skrivs som i markdown: `[text](adress)`, t.ex. `[about](#about)`. Platser på sidan: `#design`, `#photography`, `#about`, `#contact`
 
 ## Galleri
-- Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`
+- Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`, `border`
+- **Ram** (`border: true`): tunn svart linje (1 px, `--text` #111) runt bilden, i gridet och i lightboxen. Ritas innanför kanten med `outline` och `outline-offset: -1px`, så storlek och gridberäkning påverkas inte; skarp även på retina. Sätts per bild, också på var och en av bilderna i ett par. Används på Bellevue-etiketterna
 - **Videoklipp** (mp4): en post med `video: <namn>.mp4` (i stället för `file:`), `category`, `alt` och valfria `title`, `client`, `year`. Klippet importeras först med `npm run import-video -- <original>` (`scripts/import-video.mjs`), som lägger tre filer i `src/assets/gallery/<kategori>/`:
   - `<namn>.mp4`: gridversionen, H.264, utan ljud, max 1080 px hög, under 5 MB (CRF 23; annars två pass med räknad bitrate och tak, upp till tre försök)
   - `<namn>.poster.jpg`: stillbild från första bildrutan
@@ -95,7 +95,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 5. Kontrollera HTTPS, avpublicera Wix
 
 ## Öppna frågor
-- Svag bakgrundston så att bilder med vit bakgrund inte svävar. Testas på dev-servern: `?bg=a` = kortet `#F7F7F7`; `?bg=b` = kortet vitt, varje gridbild/video på `#F4F4F4` med `mix-blend-mode: multiply` (bildens vita blir `#F4F4F4`, övriga färger ca 4 % mörkare). Växlaren finns bara i dev (`Base.astro`), varianterna i `global.css` (`:root[data-bg]`)
+- (inga just nu)
 
 ## Beslut
 - Filnamn som börjar med `-` döps om vid import (t.ex. `-dsc2079.jpeg` → `dsc2079.jpg`); bilderna ligger i `src/assets/gallery/<kategori>/`
@@ -140,6 +140,16 @@ Passar t.ex. två liggande foton. Gör om två poster till en post med `pair:` (
       alt: Kort beskrivning av den nedre bilden
 ```
 Båda bilderna måste vara foton, eller båda icke-foton. För att ta bort paret: gör om det till två vanliga poster igen.
+
+**Tunn ram runt en bild** (t.ex. bilder med vit bakgrund)
+Lägg till `border: true` på bilden, i en vanlig post eller på en av bilderna i ett par (samma indrag som `alt`):
+```yaml
+- file: filnamn.jpg
+  category: graphic-design
+  alt: Kort beskrivning av bilden
+  border: true
+```
+Ramen syns i gridet och i lightboxen. Ta bort raden för att ta bort ramen.
 
 **Lägga till ett videoklipp**
 1. Lägg originalet i `material/gallery/<kategori>/` (mappen synkas inte till Git)
@@ -229,4 +239,5 @@ Uppdateras vid varje ändring av sajten.
 - Beaujolais Nouveau-logotypen utbytt mot ny version med rättat filnamn: `beaujolais-nouveau-logotype-wbkg-a.jpg` (ersätter `beaujolais-nouveaul-…`)
 - Nytt bildpar Pip Pip (flaskfoto `pipipip-dsc3341-cr.jpg` och etikett `pippip-label-80x94mm-a.jpg`) efter Pip Pip-klippet
 - Pip Pip-paret ersatt av enbart etiketten `pippip-label-80x94mm-a.jpg`; flaskfotot borttaget
-- Test av bakgrundston: varianterna A och B, växlas med `?bg=a` / `?bg=b` på dev-servern. Sidans bakgrund har egen variabel `--page`, så ränderna förblir vita i variant A. Live-sajten oförändrad
+- Test av bakgrundston (`?bg=a` / `?bg=b`) borttaget; vit bakgrund behålls
+- Nytt valfritt fält `border: true` per bild i galleri.yaml: tunn svart linje innanför bildens kant i gridet och lightboxen. Satt på Bellevue Blanc- och Rouge-etiketterna

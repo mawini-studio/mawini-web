@@ -6,6 +6,9 @@
 # alt       beskrivning för skärmläsare och Google (syns inte på sidan)
 # title, client, year
 #           valfria, visas bara i lightboxen när de är ifyllda
+# border    valfritt: border: true ger en tunn svart linje (1 px) runt
+#           bilden, i gridet och i lightboxen. För bilder med vit bakgrund.
+#           Sätts per bild, också på var och en av bilderna i ett par.
 #
 # Exempel med valfria fält:
 # - file: beaujolais-nouveau-poster-2025.jpg
@@ -14,6 +17,7 @@
 #   title: Beaujolais Nouveau 2025
 #   client: Exempelkund
 #   year: 2025
+#   border: true
 #
 # Bildpar – två bilder staplade i samma kolumn, t.ex. två liggande foton.
 # Parets höjd inklusive mellanrum blir exakt radhöjden, bilderna beskärs
@@ -76,6 +80,7 @@
     - file: bellevueblanc2021b.jpg
       category: graphic-design
       alt: "Bellevue Blanc wine label artwork, manor house line drawing in teal"
+      border: true
 
 - pair:
     - file: bellevuerouge2021a.jpg
@@ -84,6 +89,7 @@
     - file: bellevuerouge2021b.jpg
       category: graphic-design
       alt: "Bellevue Rouge wine label artwork, manor house line drawing in red"
+      border: true
 
 - video: pippip-rundel-c.mp4
   category: graphic-design
