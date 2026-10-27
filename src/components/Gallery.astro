@@ -270,9 +270,15 @@ const sections = [
     margin: 0;
   }
 
+  /* Grå platshållare medan bilden laddas. Tas bort när den är laddad, så
+     att bilder med genomskinlighet (PNG) ligger direkt mot kortet. */
   .grid a {
     display: block;
     background: #f2f2f2;
+  }
+
+  .grid a.is-loaded {
+    background: none;
   }
 
   .grid img {
@@ -580,6 +586,13 @@ const sections = [
       off = end === i ? 0 : offsets[i];
     }
   }
+
+  // Ta bort den grå platshållaren när bilden har laddats
+  document.querySelectorAll<HTMLImageElement>('.grid a img').forEach((img) => {
+    const done = () => img.closest('a')!.classList.add('is-loaded');
+    if (img.complete && img.naturalWidth) done();
+    else img.addEventListener('load', done, { once: true });
+  });
 
   // Ett grid per sektion
   document.querySelectorAll<HTMLUListElement>('.grid').forEach((grid) => {

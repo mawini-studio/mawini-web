@@ -80,6 +80,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
   - Glidningen startar först när nästa posts bilder är laddade (oftast direkt, eftersom de är förladdade och avkodade i förväg)
   - `prefers-reduced-motion: reduce`: direkt byte med en snabb toning (120 ms), bilden följer inte fingret
   - Fokus: öppnas lightboxen med mus eller touch fokuseras dialogen själv (ingen fokusram); med tangentbordet (Enter) hamnar fokus på stängknappen med ram (`:focus-visible`)
+- Gridets rutor har en grå platshållare (`#f2f2f2`) medan bilden laddas; den tas bort när bilden är laddad (`.is-loaded`), så att bilder med genomskinlighet (PNG) ligger direkt mot det vita kortet
 - **Inga bildtexter** visas i gridet. De valfria fälten (title, client, year) visas bara i lightboxen, och bara om de är ifyllda
 - Alt-text på alla bilder (fältet `alt`)
 - Kategorier: graphic-design, photography, illustration, other
@@ -259,3 +260,5 @@ Uppdateras vid varje ändring av sajten.
 - Ram (`border: true`) även på Pip Pip-etiketten
 - Nytt valfritt fält `poster:` för videoklipp: tidpunkt i sekunder för stillbilden. Importskriptet tar stillbilden därifrån (`--poster`, `--poster-only`) och sparar tidpunkten i `<namn>.poster.json`; bygget stoppar om den inte stämmer med galleri.yaml. Pip Pip-klippet: `poster: 2.0` (bildruta 59, 2,002 s)
 - Klipp med `poster:` börjar spela vid stillbildens tidpunkt (gridet och lightboxen), loopen från början
+- Beaujolais Nouveau-logotypen (`beaujolais-nouveau-logotype-wbkg-a.jpg`) ersatt av bildparet `beaujolais-nouveau-2026-roundel-a.png` (genomskinlig rundel) över `beaujolais-nouveau-2026-logotype-a.jpg`
+- Gridets grå platshållare tas bort när bilden laddats, så att genomskinliga PNG:er inte får grå hörn

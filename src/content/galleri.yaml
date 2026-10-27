@@ -48,9 +48,13 @@
 #       category: photography
 #       alt: Vintage Le Moulin Rouge hotel sign …
 
-- file: beaujolais-nouveau-logotype-wbkg-a.jpg
-  category: graphic-design
-  alt: "Beaujolais Nouveau logotype in red script on striped background"
+- pair:
+    - file: beaujolais-nouveau-2026-roundel-a.png
+      category: graphic-design
+      alt: "Beaujolais Nouveau 2026 roundel, 1950s woman with orange earrings and red Nouveau script on mint stripes"
+    - file: beaujolais-nouveau-2026-logotype-a.jpg
+      category: graphic-design
+      alt: "Beaujolais Nouveau logotype, red script and teal capitals on mint stripes"
 
 - file: beaujolais-nouveau-poster-2026.jpg
   category: graphic-design
