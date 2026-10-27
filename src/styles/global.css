@@ -3,7 +3,9 @@
   /* Bakgrundsränderna (#dedede) ritas i SVG:n i body-regeln nedan; färgen ändras där (fill='%23dedede') */
   --text: #111;
   --muted: #9a9a9a;
-  --paper: #fff;
+  --page: #fff; /* sidan bakom ränderna */
+  --paper: #fff; /* kortet och lightboxen */
+  --tile: #f2f2f2; /* bakom bilder i gridet medan de laddar */
   --sans: 'IBM Plex Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
   --gap: 6px;
@@ -12,6 +14,19 @@
   --text-size: 12px;
   --wordmark-size: 14px;
   --line-height: 1.5;
+}
+
+/* Test av svag bakgrundston, så att bilder med vit bakgrund inte svävar.
+   Växlas på dev-servern med ?bg=a / ?bg=b i adressen (se Base.astro).
+   A: kortet får en ljusgrå ton.
+   B: kortet är vitt, varje bild/video i gridet ligger på #f4f4f4 och
+      multipliceras mot den, så att vitt i bilden blir #f4f4f4. */
+:root[data-bg='a'] {
+  --paper: #f7f7f7;
+}
+
+:root[data-bg='b'] {
+  --tile: #f4f4f4;
 }
 
 *,
@@ -68,7 +83,7 @@ body {
   font-size: var(--text-size);
   line-height: var(--line-height);
   color: var(--text);
-  background-color: var(--paper);
+  background-color: var(--page);
   /* Diagonala ränder som tilad 8×8 px SVG: en 1 px linje ritad som hela
      pixelsteg (x, 7 − x), så den skarvar sömlöst mot nästa ruta och inte ger
      moiré som en gradient med icke-heltalsperiod. Färgen #dedede står som

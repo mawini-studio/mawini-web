@@ -21,6 +21,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 | Accent | `#FF4600` |
 | Bakgrundsränder | `#DEDEDE`, diagonala (/), tilad 8×8 px SVG som data-URI i `body` i `src/styles/global.css`: en 1 px linje ritad som pixelsteg, `background-size: 8px 8px`. Ger jämna linjer utan moiré på 1x och 2x. Färgen står som `fill='%23dedede'` i SVG:n (kan inte vara CSS-variabel) |
 | Text | `#111` |
+| Bakgrunder | `--page` (sidan bakom ränderna) `#fff`, `--paper` (kortet, lightboxen) `#fff`, `--tile` (bakom gridbilder medan de laddar) `#f2f2f2`, i `global.css` |
 | Ordmärke | IBM Plex Mono, glest spärrat, gemener |
 | Brödtext | IBM Plex Sans (Regular + SemiBold) |
 | Textstorlek | 12 px överallt (även mobil), radavstånd 1.5. Ordmärke 14 px. CSS-variabler i `src/styles/global.css` |
@@ -94,7 +95,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 5. Kontrollera HTTPS, avpublicera Wix
 
 ## Öppna frågor
-- (inga just nu)
+- Svag bakgrundston så att bilder med vit bakgrund inte svävar. Testas på dev-servern: `?bg=a` = kortet `#F7F7F7`; `?bg=b` = kortet vitt, varje gridbild/video på `#F4F4F4` med `mix-blend-mode: multiply` (bildens vita blir `#F4F4F4`, övriga färger ca 4 % mörkare). Växlaren finns bara i dev (`Base.astro`), varianterna i `global.css` (`:root[data-bg]`)
 
 ## Beslut
 - Filnamn som börjar med `-` döps om vid import (t.ex. `-dsc2079.jpeg` → `dsc2079.jpg`); bilderna ligger i `src/assets/gallery/<kategori>/`
@@ -228,3 +229,4 @@ Uppdateras vid varje ändring av sajten.
 - Beaujolais Nouveau-logotypen utbytt mot ny version med rättat filnamn: `beaujolais-nouveau-logotype-wbkg-a.jpg` (ersätter `beaujolais-nouveaul-…`)
 - Nytt bildpar Pip Pip (flaskfoto `pipipip-dsc3341-cr.jpg` och etikett `pippip-label-80x94mm-a.jpg`) efter Pip Pip-klippet
 - Pip Pip-paret ersatt av enbart etiketten `pippip-label-80x94mm-a.jpg`; flaskfotot borttaget
+- Test av bakgrundston: varianterna A och B, växlas med `?bg=a` / `?bg=b` på dev-servern. Sidans bakgrund har egen variabel `--page`, så ränderna förblir vita i variant A. Live-sajten oförändrad
