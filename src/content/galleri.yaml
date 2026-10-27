@@ -6,7 +6,7 @@
 # alt       beskrivning för skärmläsare och Google (syns inte på sidan)
 # title, client, year
 #           valfria, visas bara i lightboxen när de är ifyllda
-# border    valfritt: border: true ger en tunn svart linje (1 px) runt
+# border    valfritt: border: true ger en tunn grå linje (1 px, #999) runt
 #           bilden, i gridet och i lightboxen. För bilder med vit bakgrund.
 #           Sätts per bild, också på var och en av bilderna i ett par.
 #
