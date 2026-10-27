@@ -223,3 +223,6 @@ Uppdateras vid varje ändring av sajten.
 **2026-10-26**
 - Stöd för videoklipp i galleriet: `video:` i galleri.yaml, importskript med ffmpeg (`npm run import-video`), tyst autoplay i gridet när klippet syns, uppspelning med kontroller i lightboxen, stillbild med play-ikon vid prefers-reduced-motion eller nekad autoplay. Testat i Chrome och WebKit (Safaris motor) på desktop och mobilbredd
 - Första klippet: `pippip-rundel-c.mp4` (Pip Pip-logotypanimation, 6,0 MB → 0,7 MB), efter Bellevue-paren
+
+**2026-10-27**
+- Beaujolais Nouveau-logotypen utbytt mot ny version med rättat filnamn: `beaujolais-nouveau-logotype-wbkg-a.jpg` (ersätter `beaujolais-nouveaul-…`)
