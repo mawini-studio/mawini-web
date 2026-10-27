@@ -89,13 +89,9 @@
   category: graphic-design
   alt: "Pip Pip sparkling wine logo animation, Union Jack shapes turning inside a mint ring"
 
-- pair:
-    - file: pipipip-dsc3341-cr.jpg
-      category: graphic-design
-      alt: "Pip Pip English sparkling wine label on a dark bottle, embossed black serif type and Union Jack"
-    - file: pippip-label-80x94mm-a.jpg
-      category: graphic-design
-      alt: "Pip Pip wine label artwork, black serif wordmark with Union Jack and mint stripe"
+- file: pippip-label-80x94mm-a.jpg
+  category: graphic-design
+  alt: "Pip Pip wine label artwork, black serif wordmark with Union Jack and mint stripe"
 
 - file: octopus-chartm-a.jpg
   category: graphic-design
