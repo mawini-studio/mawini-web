@@ -32,7 +32,8 @@
 # originalet har ljud).
 # poster: (valfritt) tidpunkt i sekunder som stillbilden tas från, i stället
 # för första bildrutan. Stillbilden visas i gridet innan klippet laddats, vid
-# reducerad rörelse och när autoplay nekas. Ändrar du poster: måste
+# reducerad rörelse och när autoplay nekas, och uppspelningen startar vid
+# samma tidpunkt (loopen går sedan från början). Ändrar du poster: måste
 # stillbilden göras om (bygget stoppar annars):
 #   npm run import-video -- <originalfil> --poster-only
 # - video: klipp.mp4

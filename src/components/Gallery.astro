@@ -69,8 +69,13 @@ async function prepareVideo(entry: GalleryVideo) {
         `Gör om den med: npm run import-video -- <originalfil> --poster-only`,
     );
   }
+  // Med poster: startar uppspelningen vid stillbildens tidpunkt (#t=, en
+  // mediafragment-adress), så att det inte blir något hopp från stillbilden.
+  // loop börjar sedan om från klippets början som vanligt.
+  const start = wanted ? `#t=${wanted}` : '';
   // Lightboxen visar versionen med ljud om originalet hade ljud
-  const lightbox = videos[`${dir}/${name}.audio.mp4`] ?? grid;
+  const audio = videos[`${dir}/${name}.audio.mp4`];
+  const lightbox = (audio ?? grid) + start;
   const gridPoster = await getImage({ src: poster, width: Math.min(poster.width, 800), format: 'webp' });
   const full = await getImage({ src: poster, width: Math.min(poster.width, 2000), format: 'webp' });
   const caption = [entry.title, entry.client, entry.year].filter(Boolean).join(' · ');
@@ -80,7 +85,7 @@ async function prepareVideo(entry: GalleryVideo) {
     full,
     caption,
     ratio: poster.width / poster.height,
-    video: { grid, lightbox, poster: gridPoster.src, hasAudio: lightbox !== grid },
+    video: { grid: grid + start, lightbox, poster: gridPoster.src, hasAudio: Boolean(audio) },
   };
 }
 

@@ -61,6 +61,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
   - `<namn>.poster.jpg`: stillbild från första bildrutan, eller från tidpunkten i `poster:` (sekunder; första bildrutan vid eller efter tidpunkten). Skriptet läser `poster:` ur galleri.yaml, eller tar `--poster <sekunder>`; `--poster-only` gör bara om stillbilden
   - `<namn>.poster.json`: bara när tidpunkten inte är 0, t.ex. `{"time":2}`. Bygget jämför den med `poster:` och stoppar med ett tydligt fel om stillbilden inte är tagen vid rätt tidpunkt
   - Stillbilden visas i gridet innan klippet laddats, vid `prefers-reduced-motion` och när autoplay nekas, och i lightboxen innan klippet startar. Pip Pip-klippet: `poster: 2.0` (bildruta 59, 2,002 s, loggan står helt still 1,6–2,04 s)
+  - Med `poster:` startar uppspelningen vid samma tidpunkt, i gridet och i lightboxen, så det blir inget hopp från stillbilden. Görs med en mediafragment-adress (`klipp.mp4#t=2`); `loop` börjar sedan om från klippets början. Testat i Chrome och WebKit: start 2,00 s, loop till 0
   - `<namn>.audio.mp4`: bara om originalet har ljud; samma bild med AAC-ljud, för lightboxen
   - I gridet: tyst autoplay i loop (`muted`, `playsinline`, `preload="none"`), bara när minst 25 % av klippet syns (IntersectionObserver), pausas utanför skärmen och när lightboxen är öppen. Stillbilden visas innan klippet laddats. Följer det justerade gridet utifrån stillbildens proportioner
   - I lightboxen: ett steg som de andra (svep, pilar, tangentbord), stort med kontroller, ljud om originalet har ljud. Spelas när posten visas, pausas när man byter eller stänger. Drag som börjar på videons kontrollrad lämnas åt videon; pilarna byter post även när videon har fokus
@@ -257,3 +258,4 @@ Uppdateras vid varje ändring av sajten.
 - Ramens färg ändrad till #DEDEDE
 - Ram (`border: true`) även på Pip Pip-etiketten
 - Nytt valfritt fält `poster:` för videoklipp: tidpunkt i sekunder för stillbilden. Importskriptet tar stillbilden därifrån (`--poster`, `--poster-only`) och sparar tidpunkten i `<namn>.poster.json`; bygget stoppar om den inte stämmer med galleri.yaml. Pip Pip-klippet: `poster: 2.0` (bildruta 59, 2,002 s)
+- Klipp med `poster:` börjar spela vid stillbildens tidpunkt (gridet och lightboxen), loopen från början
