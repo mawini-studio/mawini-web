@@ -98,6 +98,7 @@
 - file: pippip-label-80x94mm-a.jpg
   category: graphic-design
   alt: "Pip Pip wine label artwork, black serif wordmark with Union Jack and mint stripe"
+  border: true
 
 - file: octopus-chartm-a.jpg
   category: graphic-design
