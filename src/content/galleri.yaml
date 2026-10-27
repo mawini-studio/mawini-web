@@ -85,6 +85,10 @@
       category: graphic-design
       alt: "Bellevue Rouge wine label artwork, manor house line drawing in red"
 
+- video: pippip-rundel-c.mp4
+  category: graphic-design
+  alt: "Pip Pip sparkling wine logo animation, Union Jack shapes turning inside a mint ring"
+
 - pair:
     - file: pipipip-dsc3341-cr.jpg
       category: graphic-design
@@ -92,10 +96,6 @@
     - file: pippip-label-80x94mm-a.jpg
       category: graphic-design
       alt: "Pip Pip wine label artwork, black serif wordmark with Union Jack and mint stripe"
-
-- video: pippip-rundel-c.mp4
-  category: graphic-design
-  alt: "Pip Pip sparkling wine logo animation, Union Jack shapes turning inside a mint ring"
 
 - file: octopus-chartm-a.jpg
   category: graphic-design
