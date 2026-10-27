@@ -55,7 +55,7 @@ Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typ
 
 ## Galleri
 - Enda källan: **`src/content/galleri.yaml`**, en post per bild med `file`, `category`, `alt` och valfria `title`, `client`, `year`, `border`
-- **Ram** (`border: true`): tunn grå linje (1 px, `#999`) runt bilden, i gridet och i lightboxen. Ritas innanför kanten med `outline` och `outline-offset: -1px`, så storlek och gridberäkning påverkas inte; skarp även på retina. Sätts per bild, också på var och en av bilderna i ett par. Används på Bellevue-etiketterna
+- **Ram** (`border: true`): tunn ljusgrå linje (1 px, `#DEDEDE`, samma som bakgrundsränderna) runt bilden, i gridet och i lightboxen. Ritas innanför kanten med `outline` och `outline-offset: -1px`, så storlek och gridberäkning påverkas inte; skarp även på retina. Sätts per bild, också på var och en av bilderna i ett par. Används på Bellevue-etiketterna
 - **Videoklipp** (mp4): en post med `video: <namn>.mp4` (i stället för `file:`), `category`, `alt` och valfria `title`, `client`, `year`. Klippet importeras först med `npm run import-video -- <original>` (`scripts/import-video.mjs`), som lägger tre filer i `src/assets/gallery/<kategori>/`:
   - `<namn>.mp4`: gridversionen, H.264, utan ljud, max 1080 px hög, under 5 MB (CRF 23; annars två pass med räknad bitrate och tak, upp till tre försök)
   - `<namn>.poster.jpg`: stillbild från första bildrutan
@@ -242,3 +242,4 @@ Uppdateras vid varje ändring av sajten.
 - Test av bakgrundston (`?bg=a` / `?bg=b`) borttaget; vit bakgrund behålls
 - Nytt valfritt fält `border: true` per bild i galleri.yaml: tunn svart linje innanför bildens kant i gridet och lightboxen. Satt på Bellevue Blanc- och Rouge-etiketterna
 - Ramens färg (`border: true`) ändrad från #111 till #999
+- Ramens färg ändrad till #DEDEDE

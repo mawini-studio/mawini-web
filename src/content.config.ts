@@ -16,7 +16,7 @@ const image = z.object({
   title: z.string().optional(),
   client: z.string().optional(),
   year: z.number().int().optional(),
-  // Tunn grå linje (#999) runt bilden (för bilder med vit bakgrund)
+  // Tunn ljusgrå linje (#dedede) runt bilden (för bilder med vit bakgrund)
   border: z.boolean().optional(),
 });
 
