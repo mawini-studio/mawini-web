@@ -226,3 +226,4 @@ Uppdateras vid varje ändring av sajten.
 
 **2026-10-27**
 - Beaujolais Nouveau-logotypen utbytt mot ny version med rättat filnamn: `beaujolais-nouveau-logotype-wbkg-a.jpg` (ersätter `beaujolais-nouveaul-…`)
+- Nytt bildpar Pip Pip (flaskfoto `pipipip-dsc3341-cr.jpg` och etikett `pippip-label-80x94mm-a.jpg`) före Pip Pip-klippet
