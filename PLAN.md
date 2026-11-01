@@ -262,3 +262,6 @@ Uppdateras vid varje ändring av sajten.
 - Klipp med `poster:` börjar spela vid stillbildens tidpunkt (gridet och lightboxen), loopen från början
 - Beaujolais Nouveau-logotypen (`beaujolais-nouveau-logotype-wbkg-a.jpg`) ersatt av bildparet `beaujolais-nouveau-2026-roundel-a.png` (genomskinlig rundel) över `beaujolais-nouveau-2026-logotype-a.jpg`
 - Gridets grå platshållare tas bort när bilden laddats, så att genomskinliga PNG:er inte får grå hörn
+
+**2026-11-02**
+- Ny bild `mwn-pxltype5-a.jpg` (pixeltypsnitt) sist i design
