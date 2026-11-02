@@ -265,3 +265,4 @@ Uppdateras vid varje ändring av sajten.
 
 **2026-11-02**
 - Ny bild `mwn-pxltype5-a.jpg` (pixeltypsnitt) sist i design
+- `mwn-pxltype5-a.jpg` utbytt mot ny version i 4:5 med gemener och färg, ny alt-text
