@@ -45,7 +45,7 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (SiteHeader, SiteFooter, Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar, kortet `.card`)
 
 **Övriga sidor** (finns inte i menyn, nås bara via direktlänk). Samma kort, sidhuvud (`SiteHeader`) och sidfot (`SiteFooter`) som startsidan; på undersidorna är ordmärket en länk till startsidan och sidan har en egen h1.
-- `/navalbattle/privacy/`: integritetspolicy för appen Naval Battle XTRM, på engelska (`src/pages/navalbattle/privacy/index.astro`). Rubrik, datum ("Effective date") och avsnitt med underrubriker (`.section-heading`), textbredd 40rem som om-texten. E-postadressen är en mailto-länk. Ändras policyn: uppdatera texten och datumet i filen
+- `/navalbattle/privacy/`: integritetspolicy för appen Naval Battle XTRM, på engelska (`src/pages/navalbattle/privacy/index.astro`). Rubrik, datum ("Effective date") och avsnitt med underrubriker (`.section-heading`, här i versaler via CSS med spärrning 0.05em; texten i HTML:en skrivs som vanligt), textbredd 40rem som om-texten. E-postadressen är en mailto-länk. Ändras policyn: uppdatera texten och datumet i filen
 
 ## Texter
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
@@ -273,3 +273,4 @@ Uppdateras vid varje ändring av sajten.
 **2026-11-24**
 - Ny sida https://mawini.com/navalbattle/privacy/: integritetspolicy för Naval Battle XTRM (engelska, inte i menyn)
 - Sidhuvud och sidfot utbrutna till `SiteHeader.astro` och `SiteFooter.astro`, kortet (`.card`) flyttat till `global.css`, så att alla sidor delar dem; startsidan oförändrad
+- Integritetspolicyn: avsnittsrubrikerna (h2) i versaler via `text-transform: uppercase`, spärrning 0.05em; samma storlek och vikt
