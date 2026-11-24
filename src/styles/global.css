@@ -107,9 +107,19 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+/* Det vita kortet som alla sidor ligger i, mot den randiga bakgrunden */
+.card {
+  max-width: 1080px;
+  margin: clamp(1rem, 4vw, 3.5rem) auto;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  /* Samma luft ovanför loggan som mellan loggan och linjen (hr-marginalen) */
+  padding-top: 2rem;
+  background: var(--paper);
+}
+
 /* Avdelare: 16 px luft till sektionen ovanför och under. Sektionerna ska
    inte ha egen marginal mot linjerna (sista elementets marginal nollas).
-   Undantag: headern, se index.astro. */
+   Undantag: headern, se SiteHeader.astro. */
 hr {
   border: 0;
   border-top: 1px dashed var(--accent);

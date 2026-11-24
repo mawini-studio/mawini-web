@@ -1,24 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import Logo from '../components/Logo.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import ContactIcons from '../components/ContactIcons.astro';
 import Gallery from '../components/Gallery.astro';
 import { texter, About, inline, contactLinks } from '../data/texter';
-import { toRoman } from '../lib/roman';
-
-// {year} i sidfoten: året vid bygget, uppdateras i webbläsaren (se skriptet nedan)
-const footer = inline(texter.footer).replace(
-  '{year}',
-  `<span data-roman-year>${toRoman(new Date().getFullYear())}</span>`,
-);
 ---
 
 <Base title={texter.meta.title} description={texter.meta.description} imageAlt={texter.meta.imageAlt}>
   <main class="card">
-    <header class="site-header">
-      <h1 class="wordmark" set:html={inline(texter.wordmark)} />
-      <Logo size={64} />
-    </header>
+    <SiteHeader home />
 
     <hr />
 
@@ -57,62 +48,11 @@ const footer = inline(texter.footer).replace(
 
     <hr />
 
-    <footer class="site-footer">
-      <p set:html={footer} />
-    </footer>
+    <SiteFooter />
   </main>
 </Base>
 
-<script>
-  import { toRoman } from '../lib/roman';
-
-  // Visa besökarens innevarande år och byt vid midnatt på nyårsafton i
-  // besökarens tidszon, även om sidan står öppen över årsskiftet.
-  const MAX_DELAY = 2 ** 31 - 1; // setTimeout klarar högst ca 24,8 dygn
-
-  function update() {
-    const year = new Date().getFullYear();
-    document.querySelectorAll('[data-roman-year]').forEach((el) => {
-      el.textContent = toRoman(year);
-    });
-    waitForNewYear(year + 1);
-  }
-
-  function waitForNewYear(nextYear: number) {
-    const delay = new Date(nextYear, 0, 1).getTime() - Date.now();
-    if (delay <= 0) return update();
-    setTimeout(() => (delay > MAX_DELAY ? waitForNewYear(nextYear) : update()), Math.min(delay, MAX_DELAY));
-  }
-
-  update();
-</script>
-
 <style>
-  .card {
-    max-width: 1080px;
-    margin: clamp(1rem, 4vw, 3.5rem) auto;
-    padding: clamp(1.25rem, 4vw, 3rem);
-    /* Samma luft ovanför loggan som mellan loggan och linjen (hr-marginalen) */
-    padding-top: 2rem;
-    background: var(--paper);
-  }
-
-  .site-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .wordmark {
-    margin: 0;
-    font-family: var(--mono);
-    font-weight: 400;
-    font-size: var(--wordmark-size);
-    letter-spacing: 0.35em;
-    text-transform: lowercase;
-  }
-
   .tagline {
     margin: 0;
   }
@@ -135,22 +75,9 @@ const footer = inline(texter.footer).replace(
     margin-bottom: 0;
   }
 
-  /* Headern är undantaget: 32 px mellan loggan och första linjen
-     (samma som ovanför loggan) */
-  .site-header + hr {
-    margin-top: 2rem;
-  }
-
   .contact-list {
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-
-  .site-footer p {
-    margin: 0;
-    font-family: var(--mono);
-    letter-spacing: 0.15em;
-    color: #555;
   }
 </style>

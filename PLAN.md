@@ -42,7 +42,10 @@ Förlaga: Carrd-skissen "mawini studio" (enkel sida, vitt kort mot randig bakgru
 6. Kontakt: rubriken "contact" (`.section-heading`, samma stil som design och photography: brödtextens storlek, Regular) och under den, en per rad, e-post, telefon, Instagram (visas som @mawini.studio) och LinkedIn som länkar utan understrykning (`.plain-links`, orange vid hover). Streck ovanför och under
 7. Footer: "© {year} mawini", där `{year}` blir innevarande år med romerska siffror i gemener (2026 → mmxxvi)
 
-Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar)
+Filer: `src/pages/index.astro` (sidan), `src/layouts/Base.astro` (head/meta, typsnitt), `src/components/` (SiteHeader, SiteFooter, Logo, ContactIcons, Gallery inkl. lightbox), `src/styles/global.css` (färger, typografi, länkar, kortet `.card`)
+
+**Övriga sidor** (finns inte i menyn, nås bara via direktlänk). Samma kort, sidhuvud (`SiteHeader`) och sidfot (`SiteFooter`) som startsidan; på undersidorna är ordmärket en länk till startsidan och sidan har en egen h1.
+- `/navalbattle/privacy/`: integritetspolicy för appen Naval Battle XTRM, på engelska (`src/pages/navalbattle/privacy/index.astro`). Rubrik, datum ("Effective date") och avsnitt med underrubriker (`.section-heading`), textbredd 40rem som om-texten. E-postadressen är en mailto-länk. Ändras policyn: uppdatera texten och datumet i filen
 
 ## Texter
 - Alla texter och kontaktuppgifter finns i **`src/content/texter.md`** (enda källan)
@@ -266,3 +269,7 @@ Uppdateras vid varje ändring av sajten.
 **2026-11-02**
 - Ny bild `mwn-pxltype5-a.jpg` (pixeltypsnitt) sist i design
 - `mwn-pxltype5-a.jpg` utbytt mot ny version i 4:5 med gemener och färg, ny alt-text
+
+**2026-11-24**
+- Ny sida https://mawini.com/navalbattle/privacy/: integritetspolicy för Naval Battle XTRM (engelska, inte i menyn)
+- Sidhuvud och sidfot utbrutna till `SiteHeader.astro` och `SiteFooter.astro`, kortet (`.card`) flyttat till `global.css`, så att alla sidor delar dem; startsidan oförändrad

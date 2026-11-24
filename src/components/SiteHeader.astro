@@ -1,0 +1,50 @@
+---
+import Logo from './Logo.astro';
+import { texter, inline } from '../data/texter';
+
+// Sidhuvudet på alla sidor. På startsidan är ordmärket sidans h1; på övriga
+// sidor (t.ex. /navalbattle/privacy/) har sidan en egen h1, och ordmärket
+// blir en länk tillbaka till startsidan.
+interface Props {
+  home?: boolean;
+}
+
+const { home = false } = Astro.props;
+---
+
+<header class="site-header">
+  {
+    home ? (
+      <h1 class="wordmark" set:html={inline(texter.wordmark)} />
+    ) : (
+      <p class="wordmark plain-links">
+        <a href="/" set:html={inline(texter.wordmark)} />
+      </p>
+    )
+  }
+  <Logo size={64} />
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: var(--wordmark-size);
+    letter-spacing: 0.35em;
+    text-transform: lowercase;
+  }
+
+  /* Headern är undantaget: 32 px mellan loggan och första linjen
+     (samma som ovanför loggan) */
+  .site-header + :global(hr) {
+    margin-top: 2rem;
+  }
+</style>
